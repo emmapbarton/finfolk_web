@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- TODO before going live: remove this once rates are verified against HMRC -->
+<meta name="robots" content="noindex, nofollow">
+<title>Side Income Tax Calculator — Finfolk</title>
+<meta name="description" content="Employed and earning side income? Find out how much extra tax and National Insurance to set aside, in under a minute.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  /* ---- Page header ---- */
+  header.page-head { padding: 40px 0 8px; }
+  h1.hero-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.12;
+    margin: 14px 0 10px;
+    letter-spacing: -0.01em;
+  }
+  h1.hero-title em { font-style: italic; color: var(--pine); }
+  p.hero-sub {
+    color: var(--ink-muted);
+    font-size: 16px;
+    max-width: 46ch;
+    margin: 0 0 6px;
+  }
+
+  /* ---- Form card ---- */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-top: 28px;
+  }
+
+  .field-group { margin-bottom: 20px; }
+  .field-group:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  label .hint { font-weight: 400; color: var(--ink-faint); font-size: 12.5px; }
+
+  .input-money {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--cream);
+    overflow: hidden;
+  }
+  .input-money .prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 12px;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    user-select: none;
+  }
+  .input-money input[type="number"] {
+    border: 0;
+    background: transparent;
+    padding-left: 4px;
+  }
+  .input-money:focus-within {
+    outline: 2px solid var(--pine);
+    outline-offset: 1px;
+    border-color: var(--pine);
+  }
+
+  input[type="number"], select {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    padding: 11px 12px;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--cream);
+    color: var(--ink);
+    appearance: none;
+  }
+  select { font-family: var(--font-body); font-size: 15px; }
+  input[type="number"]:focus, select:focus {
+    outline: 2px solid var(--pine);
+    outline-offset: 1px;
+    border-color: var(--pine);
+  }
+  .input-money input:focus { outline: none; }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; margin: 0;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+
+  .checkbox-row { display: flex; align-items: flex-start; gap: 9px; margin-top: 10px; }
+  .checkbox-row input { width: 16px; height: 16px; margin-top: 3px; accent-color: var(--pine); }
+  .checkbox-row label { font-weight: 400; font-size: 13.5px; color: var(--ink-muted); margin: 0; }
+
+  /* Collapsible optional sections */
+  .disclosure { border-top: 1px dashed var(--rule-strong); margin-top: 22px; padding-top: 4px; }
+  .disclosure summary {
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 12px 0;
+    color: var(--pine-deep);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .disclosure summary::-webkit-details-marker { display: none; }
+  .disclosure summary::after {
+    content: '+';
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--pine);
+    transition: transform 0.15s ease;
+  }
+  .disclosure[open] summary::after { transform: rotate(45deg); }
+  .disclosure .disclosure-body { padding: 2px 0 16px; }
+
+  .calc-button { margin-top: 26px; }
+
+  /* ---- Output ---- */
+  .output-section {
+    margin-top: 40px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .output-section.is-hidden { display: none; }
+  .output-section.is-shown { opacity: 1; transform: translateY(0); }
+
+  .hero-figure { text-align: center; padding: 6px 0 4px; }
+  .hero-figure .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+  .hero-figure .amount {
+    font-family: var(--font-display);
+    font-size: 76px;
+    line-height: 1;
+    color: var(--pine-deep);
+    margin: 6px 0 2px;
+  }
+  @media (max-width: 480px) { .hero-figure .amount { font-size: 58px; } }
+  .hero-figure .monthly { font-size: 15px; color: var(--ink-muted); }
+  .hero-figure .monthly strong { color: var(--ink); font-weight: 600; }
+
+  /* Receipt-styled breakdown — the signature element */
+  .receipt-wrap {
+    margin-top: 30px;
+    position: relative;
+    filter: drop-shadow(0 10px 24px rgba(34, 28, 21, 0.08));
+  }
+  .receipt {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-bottom: none;
+    padding: 22px 22px 26px;
+    position: relative;
+  }
+  .receipt-torn {
+    height: 14px;
+    background:
+      linear-gradient(-45deg, var(--cream) 7px, transparent 0) 0 0 / 14px 14px repeat-x,
+      linear-gradient(45deg, var(--cream) 7px, transparent 0) 0 0 / 14px 14px repeat-x;
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    margin-top: -1px;
+  }
+  .receipt-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px dashed var(--rule-strong);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+  .receipt-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; font-size: 14.5px; }
+  .receipt-row .desc { color: var(--ink); }
+  .receipt-row .desc .sub { display: block; font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+  .receipt-row .amt { font-family: var(--font-mono); font-size: 14.5px; white-space: nowrap; }
+  .receipt-row.muted .desc, .receipt-row.muted .amt { color: var(--ink-faint); }
+  .receipt-row.total {
+    border-top: 1px dashed var(--rule-strong);
+    margin-top: 6px;
+    padding-top: 14px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .receipt-row.total .amt { color: var(--pine-deep); font-size: 17px; }
+  .receipt-divider-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin: 16px 0 2px;
+  }
+
+  /* Assumptions + disclaimer */
+  .assumptions {
+    margin-top: 28px;
+    padding: 18px 20px;
+    background: var(--pine-tint);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--pine-deep);
+  }
+  .assumptions .title { font-weight: 600; font-size: 13px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .assumptions ul { margin: 8px 0 0; padding-left: 18px; }
+  .assumptions li { margin-bottom: 4px; }
+
+  .disclaimer { text-align: center; font-size: 12.5px; color: var(--ink-faint); margin-top: 18px; font-style: italic; }
+
+  .cta-trigger { height: 1px; }
+
+  .bottom-cta { margin: 44px auto 0; max-width: 400px; }
+
+  /* ---- CTA modal ---- */
+  .cta-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(34, 28, 21, 0.6);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .cta-overlay.is-shown { opacity: 1; }
+
+  .cta-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: var(--pine-deep);
+    color: var(--cream);
+    border-radius: var(--radius);
+    padding: 34px 26px 30px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    transform: scale(0.94);
+    transition: transform 0.25s ease;
+  }
+  .cta-overlay.is-shown .cta-card { transform: scale(1); }
+  .cta-card h2 { font-family: var(--font-display); font-weight: 400; font-size: 26px; margin: 0 0 8px; }
+  .cta-card p { color: #D9E0D6; font-size: 14.5px; max-width: 40ch; margin: 0 auto 20px; }
+
+  .cta-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(246, 241, 230, 0.14);
+    color: var(--cream);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s ease;
+  }
+  .cta-close:hover { background: rgba(246, 241, 230, 0.26); }
+  .cta-close:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+
+  .cta-form { display: flex; gap: 8px; max-width: 380px; margin: 0 auto; }
+  @media (max-width: 480px) { .cta-form { flex-direction: column; } }
+  .cta-form input[type="email"] {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    background: rgba(246, 241, 230, 0.12);
+    color: var(--cream);
+  }
+  .cta-form input[type="email"]::placeholder { color: #A9B6A9; }
+  .cta-form input[type="email"]:focus {
+    outline: 2px solid var(--cream);
+    outline-offset: 1px;
+    background: rgba(246, 241, 230, 0.18);
+  }
+  .cta-form button {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--gold);
+    color: var(--paper);
+    cursor: pointer;
+    transition: filter 0.12s ease;
+  }
+  .cta-form button:hover { filter: brightness(1.08); }
+  .cta-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+  .cta-note { font-size: 11.5px; color: #9FAE9C; margin-top: 12px; }
+  .cta-success { font-size: 14.5px; color: var(--cream); padding: 10px 0; }
+</style>
+</head>
+<body>
+
+<div class="draft-banner">
+  🚧 <strong>Draft build — rates not yet verified against HMRC.</strong> Do not rely on these numbers.
+</div>
+
+<div class="wrap">
+
+  <a class="back-link" href="index.html">&larr; Back to Finfolk</a>
+
+  <header class="page-head">
+    <div class="eyebrow">Finfolk · free tool</div>
+    <h1 class="hero-title">How much tax should you <em>set aside</em>?</h1>
+    <p class="hero-sub">For people who are employed <em>and</em> earn side income — freelancing, a small business, or anything HMRC wants a cut of. Three numbers in, one honest answer out.</p>
+  </header>
+
+  <form class="card" id="calc-form" autocomplete="off">
+
+    <div class="field-group two-col">
+      <div>
+        <label for="salary">Annual salary <span class="hint">gross, before tax</span></label>
+        <div class="input-money"><span class="prefix">£</span><input type="number" id="salary" min="0" step="100" placeholder="35,000" value="35000"></div>
+      </div>
+      <div>
+        <label for="pension">Pension contributions <span class="hint">optional, £/year</span></label>
+        <div class="input-money"><span class="prefix">£</span><input type="number" id="pension" min="0" step="50" placeholder="0" value="0"></div>
+      </div>
+    </div>
+
+    <div class="field-group two-col">
+      <div>
+        <label for="sideIncome">Side income <span class="hint">total this tax year</span></label>
+        <div class="input-money"><span class="prefix">£</span><input type="number" id="sideIncome" min="0" step="50" placeholder="8,000" value="8000"></div>
+      </div>
+      <div>
+        <label for="sideExpenses">Side expenses <span class="hint">allowable costs</span></label>
+        <div class="input-money"><span class="prefix">£</span><input type="number" id="sideExpenses" min="0" step="50" placeholder="1,200" value="1200"></div>
+      </div>
+    </div>
+
+    <details class="disclosure">
+      <summary>Do you have a student loan?</summary>
+      <div class="disclosure-body">
+        <div class="field-group">
+          <label for="slPlan">Repayment plan</label>
+          <select id="slPlan">
+            <option value="none" selected>No student loan</option>
+            <option value="plan1">Plan 1</option>
+            <option value="plan2">Plan 2</option>
+            <option value="plan4">Plan 4 (Scotland)</option>
+            <option value="plan5">Plan 5</option>
+            <option value="postgrad">Postgraduate Loan</option>
+          </select>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="slDeducted" checked>
+          <label for="slDeducted">My employer already deducts student loan repayments from my salary via payroll</label>
+        </div>
+      </div>
+    </details>
+
+    <details class="disclosure">
+      <summary>Do you also have savings interest or dividends?</summary>
+      <div class="disclosure-body">
+        <div class="field-group two-col">
+          <div>
+            <label for="interest">Savings interest <span class="hint">£/year</span></label>
+            <div class="input-money"><span class="prefix">£</span><input type="number" id="interest" min="0" step="10" placeholder="0" value="0"></div>
+          </div>
+          <div>
+            <label for="dividends">Dividend income <span class="hint">£/year</span></label>
+            <div class="input-money"><span class="prefix">£</span><input type="number" id="dividends" min="0" step="10" placeholder="0" value="0"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="disclosure">
+      <summary>How much PAYE tax have you already paid?</summary>
+      <div class="disclosure-body">
+        <div class="field-group">
+          <label for="payeTax">Tax withheld so far <span class="hint">optional — shown for context only, doesn't affect the total below</span></label>
+          <div class="input-money"><span class="prefix">£</span><input type="number" id="payeTax" min="0" step="50" placeholder="Leave blank if unsure" value="">
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <button type="submit" class="btn-primary btn-block calc-button">Show me the number</button>
+
+  </form>
+
+  <section class="output-section is-hidden" id="outputSection">
+
+    <div class="hero-figure">
+      <div class="label">Estimated extra tax to set aside</div>
+      <div class="amount" id="heroAmount">£0</div>
+      <div class="monthly" id="monthlyLine"></div>
+    </div>
+
+    <div class="receipt-wrap">
+      <div class="receipt">
+        <div class="receipt-head">
+          <span id="receiptYear">Tax year 2026/27</span>
+          <span id="receiptDate"></span>
+        </div>
+
+        <div class="receipt-row">
+          <div class="desc">Trading allowance applied<span class="sub" id="tradingAllowanceNote"></span></div>
+          <div class="amt" id="rowTradingAllowance">—</div>
+        </div>
+        <div class="receipt-row">
+          <div class="desc">Taxable side profit</div>
+          <div class="amt" id="rowSideProfit">£0</div>
+        </div>
+
+        <div class="receipt-divider-label">Owed on side income</div>
+
+        <div class="receipt-row">
+          <div class="desc">Income tax<span class="sub">at your marginal rate</span></div>
+          <div class="amt" id="rowIncomeTax">£0</div>
+        </div>
+        <div class="receipt-row">
+          <div class="desc">Class 4 National Insurance</div>
+          <div class="amt" id="rowClass4">£0</div>
+        </div>
+        <div class="receipt-row" id="rowSLWrap" style="display:none;">
+          <div class="desc">Student loan top-up<span class="sub">above what's already deducted via payroll</span></div>
+          <div class="amt" id="rowStudentLoan">£0</div>
+        </div>
+        <div class="receipt-row" id="rowInterestWrap" style="display:none;">
+          <div class="desc">Tax on savings interest<span class="sub">after your Personal Savings Allowance</span></div>
+          <div class="amt" id="rowInterestTax">£0</div>
+        </div>
+        <div class="receipt-row" id="rowDividendWrap" style="display:none;">
+          <div class="desc">Tax on dividends<span class="sub">after your Dividend Allowance</span></div>
+          <div class="amt" id="rowDividendTax">£0</div>
+        </div>
+
+        <div class="receipt-row total">
+          <div class="desc">Total to set aside</div>
+          <div class="amt" id="rowTotal">£0</div>
+        </div>
+
+        <div class="receipt-divider-label">For context — already handled via PAYE</div>
+        <div class="receipt-row muted">
+          <div class="desc">Income tax on salary</div>
+          <div class="amt" id="rowSalaryTax">£0</div>
+        </div>
+        <div class="receipt-row muted">
+          <div class="desc">Class 1 National Insurance</div>
+          <div class="amt" id="rowClass1">£0</div>
+        </div>
+      </div>
+      <div class="receipt-torn"></div>
+    </div>
+
+    <div class="assumptions">
+      <div class="title"><span>Assumptions</span><span>2026/27</span></div>
+      <p style="margin:0;">Rates used are <strong>placeholders and have not yet been verified</strong> against HMRC. Treat every figure on this page as illustrative until the draft banner is removed.</p>
+      <ul>
+        <li>Doesn't model Scottish income tax rates</li>
+        <li>Doesn't model benefits in kind</li>
+        <li>Doesn't model capital gains</li>
+        <li>Doesn't model Gift Aid</li>
+        <li>Doesn't model the High Income Child Benefit Charge</li>
+        <li>Doesn't model marriage allowance or multiple employments</li>
+      </ul>
+    </div>
+
+    <p class="disclaimer">Estimate only — not financial or tax advice.</p>
+
+    <div class="cta-trigger" id="ctaTrigger" aria-hidden="true"></div>
+
+  </section>
+
+  <button type="button" class="btn-outline btn-block bottom-cta" id="bottomCtaBtn">Track this all year with Finfolk →</button>
+
+  <footer class="page-foot">Finfolk · a money app for people with more than one income</footer>
+
+  <div class="cta-overlay" id="ctaOverlay">
+    <div class="cta-card" id="ctaCard" role="dialog" aria-modal="true" aria-labelledby="ctaTitle">
+      <button type="button" class="cta-close" id="ctaClose" aria-label="Close">&times;</button>
+
+      <h2 id="ctaTitle">Track this all year, automatically</h2>
+      <p>Finfolk keeps this number accurate every time a payslip or invoice lands — no spreadsheet required.</p>
+
+      <form class="cta-form" id="notify-form">
+        <input type="email" id="notify-email" placeholder="you@email.com" required>
+        <button type="submit">Notify me</button>
+      </form>
+      <div class="cta-success" id="notify-success" style="display:none;">✓ You're on the list — we'll email you when Finfolk's ready.</div>
+
+      <div class="cta-note">One email, when it's ready. No spam, no waitlist games.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     ⚠️  PLACEHOLDER RATES — DO NOT TRUST
+     These figures are illustrative only, carried over loosely from recent
+     tax years, and have NOT been checked against HMRC. Before this page
+     goes live (and before the draft banner is removed):
+       1. Verify every constant below against gov.uk / HMRC guidance for
+          the actual current tax year.
+       2. Cross-check against the same fact-checked rates used in the
+          main Finfolk tax engine (tax-engine.js) — they must match.
+       3. Run the regression scenarios against HMRC's own calculator.
+     ===================================================================== */
+  const RATES = {
+    taxYearLabel: '2026/27',
+
+    personalAllowance: 12570,
+    personalAllowanceTaperStart: 100000, // £1 lost per £2 over this
+    basicRateLimit: 50270,   // taxable income up to here: 20%
+    higherRateLimit: 125140, // up to here: 40%; above: 45%
+    basicRate: 0.20,
+    higherRate: 0.40,
+    additionalRate: 0.45,
+
+    tradingAllowance: 1000,
+
+    // Savings interest — Personal Savings Allowance depends on which
+    // band your other (non-savings) income falls into
+    savingsAllowanceBasic: 1000,
+    savingsAllowanceHigher: 500,
+    savingsAllowanceAdditional: 0,
+
+    // Dividends
+    dividendAllowance: 500,
+    dividendBasicRate: 0.0875,
+    dividendHigherRate: 0.3375,
+    dividendAdditionalRate: 0.3935,
+
+    // Class 4 NI (self-employed profits)
+    class4LowerLimit: 12570,
+    class4UpperLimit: 50270,
+    class4RateBelowUpper: 0.06,
+    class4RateAboveUpper: 0.02,
+
+    // Class 1 NI (employee, informational display only)
+    class1PrimaryThreshold: 12570,
+    class1UpperLimit: 50270,
+    class1RateBelowUpper: 0.08,
+    class1RateAboveUpper: 0.02,
+
+    studentLoanPlans: {
+      plan1:    { threshold: 26065, rate: 0.09 },
+      plan2:    { threshold: 28470, rate: 0.09 },
+      plan4:    { threshold: 32745, rate: 0.09 },
+      plan5:    { threshold: 25000, rate: 0.09 },
+      postgrad: { threshold: 21000, rate: 0.06 }
+    }
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const gbp = (n) => '£' + Math.round(Math.max(0, n)).toLocaleString('en-GB');
+
+  function progressiveIncomeTax(taxableIncome) {
+    let pa = RATES.personalAllowance;
+    if (taxableIncome > RATES.personalAllowanceTaperStart) {
+      pa = Math.max(0, pa - (taxableIncome - RATES.personalAllowanceTaperStart) / 2);
+    }
+    const afterPA = Math.max(0, taxableIncome - pa);
+    const basicBand = Math.max(0, RATES.basicRateLimit - pa);
+    const higherBand = Math.max(0, RATES.higherRateLimit - RATES.basicRateLimit);
+
+    const atBasic = Math.min(afterPA, basicBand);
+    const atHigher = Math.min(Math.max(0, afterPA - basicBand), higherBand);
+    const atAdditional = Math.max(0, afterPA - basicBand - higherBand);
+
+    return atBasic * RATES.basicRate + atHigher * RATES.higherRate + atAdditional * RATES.additionalRate;
+  }
+
+  function class4NI(profit) {
+    const band = Math.max(0, Math.min(profit, RATES.class4UpperLimit) - RATES.class4LowerLimit);
+    const above = Math.max(0, profit - RATES.class4UpperLimit);
+    return Math.max(0, band) * RATES.class4RateBelowUpper + above * RATES.class4RateAboveUpper;
+  }
+
+  function class1NI(salary) {
+    const band = Math.max(0, Math.min(salary, RATES.class1UpperLimit) - RATES.class1PrimaryThreshold);
+    const above = Math.max(0, salary - RATES.class1UpperLimit);
+    return Math.max(0, band) * RATES.class1RateBelowUpper + above * RATES.class1RateAboveUpper;
+  }
+
+  // Interest and dividends are stacked on top of non-savings income for
+  // band purposes, in that order (this is HMRC's fixed stacking rule —
+  // it's not optional or affected by how the income arrives).
+  function interestAndDividendTax(nonSavingsIncome, interest, dividends) {
+    const totalIncome = nonSavingsIncome + interest + dividends;
+
+    let pa = RATES.personalAllowance;
+    if (totalIncome > RATES.personalAllowanceTaperStart) {
+      pa = Math.max(0, pa - (totalIncome - RATES.personalAllowanceTaperStart) / 2);
+    }
+
+    const basicBandWidth = Math.max(0, RATES.basicRateLimit - pa);
+    const higherBandWidth = Math.max(0, RATES.higherRateLimit - RATES.basicRateLimit);
+
+    const nonSavingsAfterPA = Math.max(0, nonSavingsIncome - pa);
+    const usedBasicByNonSavings = Math.min(nonSavingsAfterPA, basicBandWidth);
+    const usedHigherByNonSavings = Math.min(Math.max(0, nonSavingsAfterPA - basicBandWidth), higherBandWidth);
+    const usedAdditionalByNonSavings = Math.max(0, nonSavingsAfterPA - basicBandWidth - higherBandWidth);
+
+    let remainingBasic = basicBandWidth - usedBasicByNonSavings;
+    let remainingHigher = higherBandWidth - usedHigherByNonSavings;
+
+    let psa = RATES.savingsAllowanceBasic;
+    if (usedAdditionalByNonSavings > 0) psa = RATES.savingsAllowanceAdditional;
+    else if (usedHigherByNonSavings > 0) psa = RATES.savingsAllowanceHigher;
+
+    const interestTaxable = Math.max(0, interest - psa);
+    const interestAtBasic = Math.min(interestTaxable, remainingBasic);
+    const interestAtHigher = Math.min(Math.max(0, interestTaxable - remainingBasic), remainingHigher);
+    const interestAtAdditional = Math.max(0, interestTaxable - remainingBasic - remainingHigher);
+    const interestTax = interestAtBasic * RATES.basicRate + interestAtHigher * RATES.higherRate + interestAtAdditional * RATES.additionalRate;
+
+    remainingBasic = Math.max(0, remainingBasic - interestAtBasic);
+    remainingHigher = Math.max(0, remainingHigher - interestAtHigher);
+
+    const dividendsTaxable = Math.max(0, dividends - RATES.dividendAllowance);
+    const divAtBasic = Math.min(dividendsTaxable, remainingBasic);
+    const divAtHigher = Math.min(Math.max(0, dividendsTaxable - remainingBasic), remainingHigher);
+    const divAtAdditional = Math.max(0, dividendsTaxable - remainingBasic - remainingHigher);
+    const dividendTax = divAtBasic * RATES.dividendBasicRate + divAtHigher * RATES.dividendHigherRate + divAtAdditional * RATES.dividendAdditionalRate;
+
+    return { interestTax: interestTax, dividendTax: dividendTax };
+  }
+
+  function monthsUntilJan31() {
+    const now = new Date();
+    let target = new Date(now.getFullYear(), 0, 31);
+    if (now > target) target = new Date(now.getFullYear() + 1, 0, 31);
+    const months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+    return Math.max(1, months + (target.getDate() >= now.getDate() ? 1 : 0));
+  }
+
+  function recalc() {
+    const salary = parseFloat($('salary').value) || 0;
+    const pension = parseFloat($('pension').value) || 0;
+    const sideIncome = parseFloat($('sideIncome').value) || 0;
+    const sideExpenses = parseFloat($('sideExpenses').value) || 0;
+    const interest = parseFloat($('interest').value) || 0;
+    const dividends = parseFloat($('dividends').value) || 0;
+    const slPlanKey = $('slPlan').value;
+    const slDeducted = $('slDeducted').checked;
+
+    const salaryTaxable = Math.max(0, salary - pension);
+
+    const deduction = Math.max(sideExpenses, Math.min(RATES.tradingAllowance, sideIncome));
+    const usedTradingAllowance = deduction === Math.min(RATES.tradingAllowance, sideIncome) && sideExpenses <= RATES.tradingAllowance;
+    const sideProfit = Math.max(0, sideIncome - deduction);
+
+    const nonSavingsIncome = salaryTaxable + sideProfit;
+
+    const taxOnSalaryAlone = progressiveIncomeTax(salaryTaxable);
+    const taxWithSideIncome = progressiveIncomeTax(nonSavingsIncome);
+    const extraIncomeTax = Math.max(0, taxWithSideIncome - taxOnSalaryAlone);
+
+    const class4 = class4NI(sideProfit);
+    const class1 = class1NI(salary);
+
+    let slExtra = 0;
+    const plan = RATES.studentLoanPlans[slPlanKey];
+    if (plan) {
+      const totalDue = Math.max(0, nonSavingsIncome - plan.threshold) * plan.rate;
+      const alreadyViaPayroll = slDeducted ? Math.max(0, salary - plan.threshold) * plan.rate : 0;
+      slExtra = Math.max(0, totalDue - alreadyViaPayroll);
+    }
+
+    const savingsAndDividends = interestAndDividendTax(nonSavingsIncome, interest, dividends);
+
+    const total = extraIncomeTax + class4 + slExtra + savingsAndDividends.interestTax + savingsAndDividends.dividendTax;
+    const monthly = total / monthsUntilJan31();
+
+    $('heroAmount').textContent = gbp(total);
+    $('monthlyLine').innerHTML = 'That\u2019s about <strong>' + gbp(monthly) + '/month</strong> between now and 31 January';
+
+    $('rowTradingAllowance').textContent = usedTradingAllowance ? gbp(RATES.tradingAllowance) : 'not used — expenses instead';
+    $('tradingAllowanceNote').textContent = usedTradingAllowance ? '' : ' (actual expenses claimed instead)';
+    $('rowSideProfit').textContent = gbp(sideProfit);
+    $('rowIncomeTax').textContent = gbp(extraIncomeTax);
+    $('rowClass4').textContent = gbp(class4);
+    $('rowTotal').textContent = gbp(total);
+    $('rowSalaryTax').textContent = gbp(taxOnSalaryAlone);
+    $('rowClass1').textContent = gbp(class1);
+
+    if (plan) {
+      $('rowSLWrap').style.display = '';
+      $('rowStudentLoan').textContent = gbp(slExtra);
+    } else {
+      $('rowSLWrap').style.display = 'none';
+    }
+
+    if (interest > 0) {
+      $('rowInterestWrap').style.display = '';
+      $('rowInterestTax').textContent = gbp(savingsAndDividends.interestTax);
+    } else {
+      $('rowInterestWrap').style.display = 'none';
+    }
+
+    if (dividends > 0) {
+      $('rowDividendWrap').style.display = '';
+      $('rowDividendTax').textContent = gbp(savingsAndDividends.dividendTax);
+    } else {
+      $('rowDividendWrap').style.display = 'none';
+    }
+
+    $('receiptYear').textContent = 'Tax year ' + RATES.taxYearLabel;
+    $('receiptDate').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  let resultsRevealed = false;
+  let ctaRevealed = false;
+  let ctaObserver = null;
+
+  function openCta() {
+    const overlay = $('ctaOverlay');
+    overlay.style.display = 'flex';
+    void overlay.offsetHeight;
+    overlay.classList.add('is-shown');
+    document.body.style.overflow = 'hidden';
+    $('ctaClose').focus();
+  }
+
+  function closeCta() {
+    const overlay = $('ctaOverlay');
+    overlay.classList.remove('is-shown');
+    document.body.style.overflow = '';
+    setTimeout(function () { overlay.style.display = 'none'; }, 250);
+  }
+
+  function setupCtaObserver() {
+    if (ctaObserver) return;
+    const trigger = $('ctaTrigger');
+
+    ctaObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !ctaRevealed) {
+          ctaRevealed = true;
+          openCta();
+          ctaObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+
+    ctaObserver.observe(trigger);
+  }
+
+  $('ctaClose').addEventListener('click', closeCta);
+  $('bottomCtaBtn').addEventListener('click', openCta);
+  $('ctaOverlay').addEventListener('click', function (e) {
+    if (e.target === $('ctaOverlay')) closeCta();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && $('ctaOverlay').classList.contains('is-shown')) closeCta();
+  });
+
+  function revealResults() {
+    const output = $('outputSection');
+
+    if (!resultsRevealed) {
+      output.classList.remove('is-hidden');
+      void output.offsetHeight;
+      output.classList.add('is-shown');
+      output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      resultsRevealed = true;
+      setupCtaObserver();
+    }
+  }
+
+  document.getElementById('calc-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    recalc();
+    revealResults();
+  });
+
+  // Email capture — presentational only for now.
+  // TODO: wire to real email service (e.g. Mailchimp/ConvertKit/Supabase table) before launch.
+  document.getElementById('notify-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('notify-form').style.display = 'none';
+    document.getElementById('notify-success').style.display = 'block';
+  });
+})();
+</script>
+
+</body>
+</html>

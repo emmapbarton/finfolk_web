@@ -1,0 +1,140 @@
+/* =========================================================================
+   Finfolk — shared design tokens & base components
+   Used by both index.html and calculator.html so the two pages read as
+   one site rather than two separate builds.
+   ========================================================================= */
+
+:root {
+  --cream:        #F6F1E6;
+  --cream-deep:   #EFE7D4;
+  --paper:        #FBF8F1;
+  --ink:          #221C15;
+  --ink-muted:    #6E6555;
+  --ink-faint:    #A79E8B;
+  --pine:         #2E4A3B;
+  --pine-deep:    #203327;
+  --pine-tint:    #E4EAE2;
+  --gold:         #A8763A;
+  --rule:         #D8CDB4;
+  --rule-strong:  #B9AD8F;
+  --alert:        #8C3A2B;
+  --alert-bg:     #F1E1D8;
+
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body:    'Figtree', -apple-system, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Draft guard banner ---- */
+.draft-banner {
+  background: var(--alert-bg);
+  color: var(--alert);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--alert);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.draft-banner strong { font-weight: 600; }
+
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ---- Eyebrow label ---- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--pine);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ---- Buttons ---- */
+.btn-primary, .btn-outline {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 22px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: filter 0.12s ease, background 0.12s ease, color 0.12s ease;
+}
+.btn-primary {
+  border: none;
+  background: var(--pine-deep);
+  color: var(--cream);
+}
+.btn-primary:hover { filter: brightness(1.12); }
+.btn-outline {
+  border: 1.5px solid var(--pine-deep);
+  background: transparent;
+  color: var(--pine-deep);
+}
+.btn-outline:hover { background: var(--pine-deep); color: var(--cream); }
+.btn-primary:focus-visible, .btn-outline:focus-visible {
+  outline: 2px solid var(--pine);
+  outline-offset: 2px;
+}
+.btn-block { display: block; width: 100%; }
+
+footer.page-foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 50px;
+}
+
+/* ---- Back link (calculator page) ---- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  text-decoration: none;
+  margin-top: 28px;
+}
+.back-link:hover { color: var(--pine-deep); }
+.back-link:focus-visible { outline: 2px solid var(--pine); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
