@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Everything Finfolk does — Finfolk</title>
+<meta name="description" content="Personal and sole trader finances, tracked together in one place — see why the combined tax number is only possible because everything else is connected too.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  .wrap-wide { max-width: 720px; margin: 0 auto; padding: 0 20px 90px; }
+
+  .hero { padding: 50px 0 10px; }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 400; font-size: 44px; line-height: 1.1;
+    margin: 16px 0 16px; max-width: 15ch;
+  }
+  @media (max-width: 600px) { .hero h1 { font-size: 32px; } }
+  .hero p.sub { font-size: 17px; color: var(--ink-muted); max-width: 52ch; margin: 0; }
+
+  .torn-divider {
+    height: 20px; margin: 56px 0;
+    background:
+      linear-gradient(-45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x,
+      linear-gradient(45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x;
+  }
+
+  .feature {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;
+    margin-bottom: 56px;
+  }
+  .feature.reverse { direction: rtl; }
+  .feature.reverse > * { direction: ltr; }
+  @media (max-width: 700px) { .feature, .feature.reverse { grid-template-columns: 1fr; direction: ltr; } }
+
+  .feature .eyebrow-small {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--pine); margin-bottom: 10px;
+  }
+  .feature h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0 0 10px; }
+  .feature p { font-size: 15px; color: var(--ink-muted); margin: 0; }
+
+  .visual {
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 22px;
+  }
+
+  .chip-demo { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip-demo span {
+    border-radius: 20px; padding: 8px 14px; font-size: 12.5px; border: 1px solid var(--rule-strong);
+    background: var(--cream); color: var(--ink);
+  }
+  .chip-demo span.on { background: var(--pine-deep); color: var(--cream); border-color: var(--pine-deep); }
+
+  .tax-demo .row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: var(--ink-muted); }
+  .tax-demo .row.total { border-top: 1px dashed var(--rule-strong); margin-top: 6px; padding-top: 12px; font-weight: 600; color: var(--ink); }
+  .tax-demo .row.total .amt { color: var(--pine-deep); font-size: 16px; }
+
+  .bar-demo .bar-row { display: grid; grid-template-columns: 60px 1fr; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-muted); margin-bottom: 10px; }
+  .bar-demo .bar { height: 7px; background: var(--cream-deep); border-radius: 4px; overflow: hidden; }
+  .bar-demo .bar div { height: 100%; background: var(--gold); }
+
+  .stat-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-demo .stat { background: var(--cream); border-radius: 8px; padding: 14px 16px; }
+  .stat-demo .stat .l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); margin-bottom: 6px; }
+  .stat-demo .stat .v { font-size: 20px; font-family: var(--font-mono); color: var(--pine-deep); }
+
+  .cash-demo { text-align: center; }
+  .cash-demo .big { font-family: var(--font-display); font-size: 40px; color: var(--pine-deep); }
+  .cash-demo .l { font-size: 12px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+  .closing {
+    background: var(--pine-deep); color: var(--cream); border-radius: var(--radius); padding: 46px 32px;
+    text-align: center; margin-top: 20px;
+  }
+  .closing h2 { font-family: var(--font-display); font-weight: 400; font-size: 30px; margin: 0 0 10px; }
+  .closing p { color: #D9E0D6; font-size: 15px; max-width: 44ch; margin: 0 auto 24px; }
+</style>
+</head>
+<body>
+
+<div class="draft-banner">
+  🚧 <strong>Draft build — not yet live.</strong> The calculator's rates are still being verified against HMRC.
+</div>
+
+<div class="wrap-wide">
+
+  <a class="back-link" href="index.html">&larr; Back to Finfolk</a>
+
+  <section class="hero">
+    <div class="eyebrow">Finfolk</div>
+    <h1>Two financial lives. One place to see them together.</h1>
+    <p class="sub">Most people who are employed and self-employed run two separate apps — one for their job, one for their side income — and do the hard part, combining them, themselves, once a year, under pressure. Finfolk doesn't split you into two accounts. Everything below runs off the same underlying picture, which is exactly why the tax number you get is real, not a guess.</p>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <section class="feature">
+    <div>
+      <div class="eyebrow-small">Track</div>
+      <h2>Capture it in seconds, from either side of your income</h2>
+      <p>A quick daily check-in for expenses, mileage, or receipts — tagged personal or business as you go, not reconstructed from memory in January. The moment something's logged, it's already sitting in the right place.</p>
+    </div>
+    <div class="visual chip-demo">
+      <span class="on">Personal expense</span>
+      <span class="on">Business expense</span>
+      <span>Mileage</span>
+      <span>I'm up to date</span>
+      <span>Later</span>
+    </div>
+  </section>
+
+  <section class="feature reverse">
+    <div>
+      <div class="eyebrow-small">Tax hub</div>
+      <h2>One number, built from real data — not a guess</h2>
+      <p>Your PAYE salary and sole trader profit, combined into a single Self Assessment estimate that updates as the year goes on. A running tax pot shows exactly how much you've set aside against what you'll actually owe.</p>
+    </div>
+    <div class="visual tax-demo">
+      <div class="row"><span>ST profit to date</span><span>£3,002.00</span></div>
+      <div class="row"><span>PAYE salary</span><span>£6,642.00</span></div>
+      <div class="row total"><span>Estimated SA bill</span><span class="amt">£1,240.00</span></div>
+    </div>
+  </section>
+
+  <section class="feature">
+    <div>
+      <div class="eyebrow-small">Budgeting</div>
+      <h2>Your personal life doesn't pause because you also freelance</h2>
+      <p>Needs, wants, and savings, tracked automatically from what you actually earn and spend across both incomes — not a separate budget you have to remember to update.</p>
+    </div>
+    <div class="visual bar-demo">
+      <div class="bar-row"><span>Needs</span><div class="bar"><div style="width:62%"></div></div></div>
+      <div class="bar-row"><span>Wants</span><div class="bar"><div style="width:34%"></div></div></div>
+      <div class="bar-row"><span>Savings</span><div class="bar"><div style="width:18%"></div></div></div>
+    </div>
+  </section>
+
+  <section class="feature reverse">
+    <div>
+      <div class="eyebrow-small">Wealth</div>
+      <h2>The whole picture, not just this month's balance</h2>
+      <p>Every account — personal and business — rolled into one net worth figure, so you can see the actual direction you're heading, not just whether this month looked okay.</p>
+    </div>
+    <div class="visual stat-demo">
+      <div class="stat"><div class="l">Net worth</div><div class="v">£18,420</div></div>
+      <div class="stat"><div class="l">This month</div><div class="v">+£640</div></div>
+    </div>
+  </section>
+
+  <section class="feature">
+    <div>
+      <div class="eyebrow-small">Sole trader cash flow</div>
+      <h2>Always know what's actually coming in</h2>
+      <p>Income and expenses for the business side, invoices tracked as they're raised and paid — so "how's the business doing" has a real answer, not a shrug.</p>
+    </div>
+    <div class="visual cash-demo">
+      <div class="big">£0.00</div>
+      <div class="l">No open invoices — cash flow is clear</div>
+    </div>
+  </section>
+
+  <div class="torn-divider"></div>
+
+  <section class="closing">
+    <h2>Get early access</h2>
+    <p>Finfolk isn't quite ready. Leave your email and we'll let you know the moment it is.</p>
+    <a class="btn-primary" href="index.html#waitlist">Join the waitlist</a>
+  </section>
+
+  <footer class="page-foot">Finfolk · a money app for people with more than one income</footer>
+
+</div>
+</body>
+</html>
