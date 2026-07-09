@@ -3,266 +3,347 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- TODO before going live: remove this once the calculator's rates are verified against HMRC -->
 <meta name="robots" content="noindex, nofollow">
-<title>Finfolk — money, without the monthly panic</title>
-<meta name="description" content="For people who are employed and self-employed at the same time. Finfolk tracks both and tells you exactly what to set aside for tax.">
+<title>Finfolk — redesign mockup (Kinetic Ledger)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-  .wrap-wide { max-width: 680px; margin: 0 auto; padding: 0 20px 90px; }
+  :root {
+    --cream: #F6F1E6;
+    --cream-deep: #EFE7D4;
+    --paper: #FBF8F1;
+    --ink: #221C15;
+    --ink-muted: #6E6555;
+    --ink-faint: #A79E8B;
+    --pine: #2E4A3B;
+    --pine-deep: #203327;
+    --pine-tint: #E4EAE2;
+    --gold: #A8763A;
+    --rule: #D8CDB4;
+    --rule-strong: #B9AD8F;
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'Figtree', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --radius: 3px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-  /* ---- Hero Number ---- */
+  .mockup-tag {
+    position: fixed; top: 12px; right: 12px; z-index: 200;
+    background: var(--ink); color: var(--cream); font-family: var(--font-mono);
+    font-size: 11px; padding: 5px 10px; border-radius: 20px; letter-spacing: 0.03em;
+    opacity: 0.85;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---- Header ---- */
+  header { padding: 30px 0 0; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.12em;
+    color: var(--pine-deep); font-weight: 500;
+  }
+  .eyebrow .dot { display: inline-block; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  /* ---- Hero: asymmetric split ---- */
   .hero {
-    text-align: center;
-    padding: 64px 0 8px;
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px;
+    align-items: center; padding: 56px 0 40px; position: relative;
   }
-  .hero .eyebrow { justify-content: center; margin-bottom: 18px; }
-  .hero h1 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 52px;
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    margin: 0 0 18px;
-  }
-  @media (max-width: 480px) { .hero h1 { font-size: 38px; } }
-  .hero p.sub {
-    color: var(--ink-muted);
-    font-size: 17px;
-    max-width: 44ch;
-    margin: 0 auto 30px;
-  }
-  .hero .btn-primary { font-size: 16px; padding: 15px 28px; }
-  .hero .micro-note {
-    display: block;
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    margin-top: 10px;
-  }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: 32px; } }
 
-  /* ---- Mini receipt teaser ---- */
-  .mini-receipt-wrap {
-    max-width: 320px;
-    margin: 46px auto 0;
-    position: relative;
-    filter: drop-shadow(0 14px 28px rgba(34, 28, 21, 0.1));
+  .trail-dot {
+    position: absolute; top: 0; left: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gold); opacity: 0.35; pointer-events: none; z-index: 5;
+    transform: translate(-50%, -50%); transition: opacity 0.2s ease;
   }
-  .mini-receipt {
-    background: var(--paper);
-    border: 1px solid var(--rule);
-    border-bottom: none;
-    padding: 16px 18px 20px;
-    text-align: left;
+  @media (max-width: 860px), (hover: none) { .trail-dot { display: none; } }
+
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 400; font-size: 88px; line-height: 0.98;
+    letter-spacing: -0.02em; margin: 18px 0 24px;
   }
-  .mini-receipt-torn {
-    height: 12px;
-    background:
-      linear-gradient(-45deg, var(--cream) 6px, transparent 0) 0 0 / 12px 12px repeat-x,
-      linear-gradient(45deg, var(--cream) 6px, transparent 0) 0 0 / 12px 12px repeat-x;
-    border-left: 1px solid var(--rule);
-    border-right: 1px solid var(--rule);
-    margin-top: -1px;
+  @media (max-width: 860px) { .hero h1 { font-size: 52px; } }
+  .hero h1 em { font-style: italic; color: var(--pine); }
+
+  .hero p.sub { font-size: 18px; color: var(--ink-muted); max-width: 42ch; margin: 0 0 30px; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body); font-weight: 700; font-size: 16px;
+    padding: 16px 26px; border-radius: var(--radius); border: none;
+    background: var(--pine-deep); color: var(--cream); cursor: pointer; text-decoration: none;
+    transition: transform 0.12s ease, box-shadow 0.15s ease;
+    will-change: transform;
   }
-  .mini-receipt-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-faint);
-    border-bottom: 1px dashed var(--rule-strong);
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+  .btn-primary:hover { box-shadow: 0 10px 24px rgba(32,51,39,0.25); }
+  .btn-primary:active { transform: scale(0.94) !important; }
+  .btn-primary i { display: inline-block; transition: transform 0.2s ease; font-style: normal; }
+  .btn-primary:hover i { transform: translateX(5px); }
+  .hero .micro { display: block; font-size: 12.5px; color: var(--ink-faint); margin-top: 12px; }
+
+  /* ---- Ticking receipt panel ---- */
+  .receipt-panel {
+    background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius);
+    padding: 22px 22px 26px; position: relative;
+    box-shadow: 0 20px 50px rgba(34,28,21,0.10);
+    transform: rotate(1.2deg);
+    transition: transform 0.25s ease;
   }
-  .mini-receipt-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    padding: 5px 0;
-    color: var(--ink-muted);
+  .receipt-panel::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -9px; height: 14px;
+    background: linear-gradient(-45deg, var(--cream) 7px, transparent 0) 0 0/14px 14px repeat-x,
+                linear-gradient(45deg, var(--cream) 7px, transparent 0) 0 0/14px 14px repeat-x;
+    border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
   }
-  .mini-receipt-row.total {
-    border-top: 1px dashed var(--rule-strong);
-    margin-top: 4px;
-    padding-top: 10px;
-    font-weight: 600;
-    font-size: 14.5px;
-    color: var(--pine-deep);
+  .receipt-head {
+    display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 1px dashed var(--rule-strong); padding-bottom: 10px; margin-bottom: 10px;
   }
-  .mini-receipt-row .amt { font-family: var(--font-mono); }
+  .live-dot { display: inline-flex; align-items: center; gap: 5px; color: var(--pine); }
+  .live-dot::before { content: ''; width: 6px; height: 6px; background: var(--pine); border-radius: 50%; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .r-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: var(--ink-muted); }
+  .r-row .amt { font-family: var(--font-mono); }
+  .r-row.total { border-top: 1px dashed var(--rule-strong); margin-top: 5px; padding-top: 12px; font-weight: 700; font-size: 15px; }
+  .r-row.total .amt { color: var(--pine-deep); font-size: 17px; display: inline-block; transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), opacity 0.2s ease; }
+
+  /* ---- Ticker strip ---- */
+  .ticker-wrap { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: var(--cream-deep); overflow: hidden; margin-top: 8px; }
+  .ticker { display: flex; white-space: nowrap; animation: scroll-left 32s linear infinite; }
+  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker span {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-muted);
+    padding: 12px 28px; border-right: 1px dashed var(--rule-strong);
+  }
+  @media (prefers-reduced-motion: reduce) { .ticker { animation: none; } }
+
+  /* ---- Torn divider ---- */
+  .torn-divider { height: 20px; margin: 0; background:
+      linear-gradient(-45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x,
+      linear-gradient(45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x; }
+  .torn-divider.flip { transform: scaleY(-1); }
+  .section-on-paper { background: var(--paper); }
+
+  /* ---- Scroll reveal ---- */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
   /* ---- How it works ---- */
-  .how-it-works { margin-top: 88px; }
-  .section-eyebrow {
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--pine);
-    margin-bottom: 8px;
-  }
-  .how-it-works h2 {
-    text-align: center;
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 32px;
-    margin: 0 0 44px;
-  }
-  .step-list { display: grid; gap: 26px; }
-  @media (min-width: 620px) {
-    .step-list { grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  }
+  .how { padding: 64px 0 70px; }
+  .how .eyebrow { text-align: center; display: block; }
+  .how h2 { font-family: var(--font-display); font-weight: 400; font-size: 40px; text-align: center; margin: 12px 0 46px; }
+  .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
   .step {
-    background: var(--paper);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    padding: 22px 20px;
+    background: var(--cream); border: 1px solid var(--rule); border-radius: var(--radius);
+    padding: 26px 22px; transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.2s ease, box-shadow 0.2s ease;
   }
+  .step:hover { transform: translateY(-6px); border-color: var(--pine); box-shadow: 0 16px 30px rgba(34,28,21,0.08); }
   .step .num {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--pine);
-    letter-spacing: 0.05em;
-    margin-bottom: 10px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--pine); margin-bottom: 12px;
+    display: inline-block; transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
   }
-  .step h3 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 22px;
-    margin: 0 0 8px;
-  }
-  .step p { font-size: 14px; color: var(--ink-muted); margin: 0; }
+  .step:hover .num { transform: scale(1.3); }
+  .step h3 { font-family: var(--font-display); font-weight: 400; font-size: 25px; margin: 0 0 8px; }
+  .step p { font-size: 14.5px; color: var(--ink-muted); margin: 0; }
 
   /* ---- Waitlist ---- */
-  .waitlist {
-    margin-top: 90px;
-    background: var(--pine-deep);
-    color: var(--cream);
-    border-radius: var(--radius);
-    padding: 44px 30px;
-    text-align: center;
-  }
-  .waitlist h2 { font-family: var(--font-display); font-weight: 400; font-size: 30px; margin: 0 0 10px; }
-  .waitlist p { color: #D9E0D6; font-size: 14.5px; max-width: 42ch; margin: 0 auto 24px; }
-  .waitlist-form { display: flex; gap: 8px; max-width: 380px; margin: 0 auto; }
+  .waitlist { background: var(--pine-deep); color: var(--cream); border-radius: var(--radius); padding: 54px 34px; text-align: center; margin: 0 0 70px; }
+  .waitlist h2 { font-family: var(--font-display); font-weight: 400; font-size: 36px; margin: 0 0 12px; }
+  .waitlist p { color: #D9E0D6; font-size: 15px; max-width: 44ch; margin: 0 auto 26px; }
+  .waitlist-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; }
   @media (max-width: 480px) { .waitlist-form { flex-direction: column; } }
-  .waitlist-form input[type="email"] {
-    flex: 1;
-    font-family: var(--font-body);
-    font-size: 14.5px;
-    padding: 13px 14px;
-    border-radius: var(--radius);
-    border: 1px solid transparent;
-    background: rgba(246, 241, 230, 0.12);
-    color: var(--cream);
-  }
-  .waitlist-form input[type="email"]::placeholder { color: #A9B6A9; }
-  .waitlist-form input[type="email"]:focus {
-    outline: 2px solid var(--cream);
-    outline-offset: 1px;
-    background: rgba(246, 241, 230, 0.18);
-  }
-  .waitlist-form button {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 14.5px;
-    padding: 13px 20px;
-    border-radius: var(--radius);
-    border: none;
-    background: var(--gold);
-    color: var(--paper);
-    cursor: pointer;
-    transition: filter 0.12s ease;
-  }
-  .waitlist-form button:hover { filter: brightness(1.08); }
-  .waitlist-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
-  .waitlist-note { font-size: 11.5px; color: #9FAE9C; margin-top: 14px; }
-  .waitlist-success { font-size: 14.5px; color: var(--cream); padding: 10px 0; }
+  .waitlist-form input { flex:1; font-family: var(--font-body); font-size: 15px; padding: 14px; border-radius: var(--radius); border: 1px solid transparent; background: rgba(246,241,230,0.12); color: var(--cream); }
+  .waitlist-form input::placeholder { color: #A9B6A9; }
+  .waitlist-form button { font-family: var(--font-body); font-weight: 700; font-size: 15px; padding: 14px 22px; border-radius: var(--radius); border: none; background: var(--gold); color: var(--paper); cursor: pointer; transition: transform 0.15s cubic-bezier(.34,1.56,.64,1); }
+  .waitlist-form button:hover { transform: scale(1.06); }
+  .waitlist-form button:active { transform: scale(0.92); }
+  .waitlist { position: relative; overflow: visible; }
+  .confetti-piece { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; pointer-events: none; z-index: 10; }
+
+  footer { text-align: center; font-size: 12px; color: var(--ink-faint); padding-bottom: 50px; }
 </style>
 </head>
 <body>
 
-<div class="draft-banner">
-  🚧 <strong>Draft build — not yet live.</strong> The calculator's rates are still being verified against HMRC.
+<div class="mockup-tag">Mockup — Kinetic Ledger</div>
+
+<div class="wrap">
+  <header><div class="eyebrow"><span class="dot">●</span> FINFOLK</div></header>
+
+  <section class="hero" id="heroSection">
+    <div class="trail-dot" id="trailDot"></div>
+    <div>
+      <h1>Money,<br>without the<br><em>monthly panic.</em></h1>
+      <p class="sub">For people who are employed <em>and</em> self-employed at the same time. Finfolk tracks both, and always knows what to set aside for tax.</p>
+      <a class="btn-primary" href="#">Try the free tax calculator <i>→</i></a>
+      <span class="micro">No signup. Takes about a minute.</span>
+    </div>
+
+    <div class="receipt-panel" id="receiptPanel">
+      <div class="receipt-head"><span>Example</span><span class="live-dot">live</span></div>
+      <div class="r-row"><span>Income tax on side income</span><span class="amt" id="v1">£860</span></div>
+      <div class="r-row"><span>Class 4 National Insurance</span><span class="amt" id="v2">£210</span></div>
+      <div class="r-row"><span>Student loan top-up</span><span class="amt" id="v3">£170</span></div>
+      <div class="r-row total"><span>Total to set aside</span><span class="amt" id="v4">£1,240</span></div>
+    </div>
+  </section>
 </div>
 
-<div class="wrap-wide">
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker"></div>
+</div>
 
-  <header>
-    <div class="eyebrow" style="justify-content:flex-start; margin-top:24px;">Finfolk</div>
-  </header>
-
-  <section class="hero">
-    <h1>Money, without the monthly panic.</h1>
-    <p class="sub">For people who are employed <em>and</em> self-employed at the same time. Finfolk tracks both, and always knows what to set aside for tax.</p>
-    <a class="btn-primary" href="calculator.html">Try the free tax calculator →</a>
-    <span class="micro-note">No signup. Takes about a minute.</span>
-
-    <div class="mini-receipt-wrap">
-      <div class="mini-receipt">
-        <div class="mini-receipt-label">Example</div>
-        <div class="mini-receipt-row"><span>Income tax on side income</span><span class="amt">£860</span></div>
-        <div class="mini-receipt-row"><span>Class 4 National Insurance</span><span class="amt">£210</span></div>
-        <div class="mini-receipt-row"><span>Student loan top-up</span><span class="amt">£170</span></div>
-        <div class="mini-receipt-row total"><span>Total to set aside</span><span class="amt">£1,240</span></div>
-      </div>
-      <div class="mini-receipt-torn"></div>
+<div class="torn-divider"></div>
+<div class="section-on-paper">
+  <div class="wrap how">
+    <span class="eyebrow reveal">How it works</span>
+    <h2 class="reveal">Three steps, all year round</h2>
+    <div class="steps">
+      <div class="step reveal"><div class="num">01</div><h3>Track</h3><p>Log your payslips and invoices as they come in — no spreadsheet required.</p></div>
+      <div class="step reveal"><div class="num">02</div><h3>Combine</h3><p>Finfolk works out your PAYE and side income tax together, not separately.</p></div>
+      <div class="step reveal"><div class="num">03</div><h3>Set aside</h3><p>See exactly how much to save, and by when — updated as the year goes on.</p></div>
     </div>
-  </section>
+  </div>
+</div>
+<div class="torn-divider flip"></div>
 
-  <section class="how-it-works">
-    <div class="section-eyebrow">How it works</div>
-    <h2>Three steps, all year round</h2>
-    <div class="step-list">
-      <div class="step">
-        <div class="num">01</div>
-        <h3>Track</h3>
-        <p>Log your payslips and invoices as they come in — no spreadsheet required.</p>
-      </div>
-      <div class="step">
-        <div class="num">02</div>
-        <h3>Combine</h3>
-        <p>Finfolk works out your PAYE and side income tax together, not separately.</p>
-      </div>
-      <div class="step">
-        <div class="num">03</div>
-        <h3>Set aside</h3>
-        <p>See exactly how much to save, and by when — updated as the year goes on.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="waitlist">
+<div class="wrap">
+  <section class="waitlist reveal">
     <h2>Get early access</h2>
     <p>Finfolk isn't quite ready. Leave your email and we'll let you know the moment it is.</p>
-
-    <form class="waitlist-form" id="waitlist-form">
-      <input type="email" id="waitlist-email" placeholder="you@email.com" required>
-      <button type="submit">Notify me</button>
+    <form class="waitlist-form" id="waitlistForm" onsubmit="return false;">
+      <input type="email" placeholder="you@email.com">
+      <button type="submit" id="notifyBtn">Notify me</button>
     </form>
-    <div class="waitlist-success" id="waitlist-success" style="display:none;">✓ You're on the list — we'll email you when Finfolk's ready.</div>
-
-    <div class="waitlist-note">One email, when it's ready. No spam, no waitlist games.</div>
   </section>
-
-  <footer class="page-foot">Finfolk · a money app for people with more than one income</footer>
-
+  <footer>Finfolk · a money app for people with more than one income</footer>
 </div>
 
 <script>
 (function () {
-  'use strict';
-  // Email capture — presentational only for now.
-  // TODO: wire to the same email service used on calculator.html.
-  document.getElementById('waitlist-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    document.getElementById('waitlist-form').style.display = 'none';
-    document.getElementById('waitlist-success').style.display = 'block';
+  // Scroll-triggered reveals, staggered for step cards
+  var els = document.querySelectorAll('.reveal');
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var delay = e.target.classList.contains('step') ? Array.prototype.indexOf.call(document.querySelectorAll('.step'), e.target) * 100 : 0;
+        setTimeout(function () { e.target.classList.add('in'); }, delay);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(function (el) { obs.observe(el); });
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Ticking hero numbers — cycles through a couple of example states
+  var states = [
+    { v1: 860, v2: 210, v3: 170, v4: 1240 },
+    { v1: 1120, v2: 340, v3: 0, v4: 1460 },
+    { v1: 640, v2: 150, v3: 90, v4: 880 }
+  ];
+  var i = 0;
+  function render(s) {
+    document.getElementById('v1').textContent = '£' + s.v1.toLocaleString('en-GB');
+    document.getElementById('v2').textContent = '£' + s.v2.toLocaleString('en-GB');
+    document.getElementById('v3').textContent = '£' + s.v3.toLocaleString('en-GB');
+    document.getElementById('v4').textContent = '£' + s.v4.toLocaleString('en-GB');
+  }
+  render(states[0]);
+  if (!reduceMotion) {
+    setInterval(function () {
+      i = (i + 1) % states.length;
+      var total = document.getElementById('v4');
+      total.style.transform = 'scale(0.7)';
+      total.style.opacity = '0';
+      setTimeout(function () {
+        render(states[i]);
+        total.style.transform = 'scale(1.15)';
+        total.style.opacity = '1';
+        setTimeout(function () { total.style.transform = 'scale(1)'; }, 180);
+      }, 220);
+    }, 3200);
+  }
+
+  // Ticker strip content, duplicated for seamless loop
+  var items = ['Income tax on side income', 'Class 4 National Insurance', 'Trading allowance applied', 'Student loan top-up', 'Personal Savings Allowance', 'Dividend Allowance', '31 January deadline'];
+  var html = items.concat(items).map(function (t) { return '<span>' + t + '</span>'; }).join('');
+  document.getElementById('ticker').innerHTML = html;
+
+  // Cursor-reactive tilt on the receipt panel + trailing dot, scoped to the hero
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    var heroSection = document.getElementById('heroSection');
+    var panel = document.getElementById('receiptPanel');
+    var dot = document.getElementById('trailDot');
+    var dotX = 0, dotY = 0, targetX = 0, targetY = 0;
+
+    heroSection.addEventListener('mousemove', function (e) {
+      var rect = panel.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dx = (e.clientX - cx) / rect.width;
+      var dy = (e.clientY - cy) / rect.height;
+      panel.style.transform = 'rotate(' + (1.2 + dx * 6) + 'deg) scale(1.015)';
+
+      var heroRect = heroSection.getBoundingClientRect();
+      targetX = e.clientX - heroRect.left;
+      targetY = e.clientY - heroRect.top;
+    });
+    heroSection.addEventListener('mouseleave', function () {
+      panel.style.transform = 'rotate(1.2deg) scale(1)';
+      dot.style.opacity = '0';
+    });
+    heroSection.addEventListener('mouseenter', function () { dot.style.opacity = '0.35'; });
+
+    function loop() {
+      dotX += (targetX - dotX) * 0.12;
+      dotY += (targetY - dotY) * 0.12;
+      dot.style.left = dotX + 'px';
+      dot.style.top = dotY + 'px';
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  // Confetti burst on waitlist submit
+  var colors = ['#2E4A3B', '#A8763A', '#D8CDB4', '#6E6555'];
+  document.getElementById('waitlistForm').addEventListener('submit', function () {
+    var origin = document.getElementById('notifyBtn').getBoundingClientRect();
+    var waitlistBox = document.querySelector('.waitlist');
+    var boxRect = waitlistBox.getBoundingClientRect();
+    for (var n = 0; n < 24; n++) {
+      var piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.background = colors[n % colors.length];
+      piece.style.left = (origin.left - boxRect.left + origin.width / 2) + 'px';
+      piece.style.top = (origin.top - boxRect.top) + 'px';
+      piece.style.borderRadius = (n % 2 === 0) ? '50%' : '2px';
+      waitlistBox.appendChild(piece);
+
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 60 + Math.random() * 90;
+      var endX = Math.cos(angle) * dist;
+      var endY = Math.sin(angle) * dist - 40;
+      var rot = Math.random() * 360;
+
+      piece.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(' + endX + 'px,' + endY + 'px) rotate(' + rot + 'deg)', opacity: 0 }
+      ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
+
+      (function (el) { setTimeout(function () { el.remove(); }, 1400); })(piece);
+    }
   });
 })();
 </script>
