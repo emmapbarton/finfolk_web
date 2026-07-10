@@ -61,6 +61,12 @@
     border-radius: var(--radius);
     background: white;
     overflow: hidden;
+    transition: transform 0.16s cubic-bezier(.2, 1.45, .45, 1), border-color 0.14s ease, box-shadow 0.14s ease;
+  }
+  .input-money:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 107, 120, 0.42);
+    box-shadow: 0 8px 20px rgba(2, 75, 86, 0.08);
   }
   .input-money .prefix {
     display: flex;
@@ -94,6 +100,12 @@
     background: white;
     color: var(--ink);
     appearance: none;
+    transition: transform 0.16s cubic-bezier(.2, 1.45, .45, 1), border-color 0.14s ease, box-shadow 0.14s ease;
+  }
+  select:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 107, 120, 0.42);
+    box-shadow: 0 8px 20px rgba(2, 75, 86, 0.08);
   }
   select { font-family: var(--font-body); font-size: 15px; }
   input[type="number"]:focus, select:focus {
@@ -126,6 +138,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: transform 0.16s cubic-bezier(.2, 1.45, .45, 1), color 0.14s ease;
+  }
+  .disclosure summary:hover {
+    transform: translateX(3px);
+    color: var(--pine);
   }
   .disclosure summary::-webkit-details-marker { display: none; }
   .disclosure summary::after {
@@ -190,6 +207,15 @@
     overflow: hidden;
     color: #111;
     font-family: "Courier New", ui-monospace, monospace;
+    transform: translateY(0) rotate(0deg);
+    transition: transform 0.22s cubic-bezier(.2, 1.45, .45, 1), filter 0.18s ease;
+  }
+  .receipt-wrap:hover .receipt {
+    animation: receipt-wiggle 0.32s cubic-bezier(.2, 1.45, .45, 1) forwards;
+    filter: contrast(1.03);
+  }
+  .receipt-wrap:hover .receipt-barcode {
+    transform: translateX(3px);
   }
   .receipt::before {
     content: '';
@@ -254,6 +280,7 @@
         #111 26px 29px, transparent 29px 34px,
         #111 34px 35px, transparent 35px 38px,
         #111 38px 44px, transparent 44px 48px) 0 0 / 48px 46px repeat-x;
+    transition: transform 0.18s ease;
   }
   .receipt-note {
     font-family: "Courier New", ui-monospace, monospace;
@@ -332,9 +359,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.12s ease;
+    transition: background 0.12s ease, transform 0.18s cubic-bezier(.2, 1.45, .45, 1);
   }
-  .cta-close:hover { background: rgba(246, 241, 230, 0.26); }
+  .cta-close:hover { background: rgba(246, 241, 230, 0.26); transform: rotate(7deg) scale(1.08); }
   .cta-close:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
 
   .cta-form { display: flex; gap: 8px; max-width: 380px; margin: 0 auto; }
@@ -365,9 +392,10 @@
     background: var(--pine-deep);
     color: white;
     cursor: pointer;
-    transition: filter 0.12s ease;
+    transform: translateY(0) scale(1);
+    transition: filter 0.12s ease, transform 0.18s cubic-bezier(.2, 1.45, .45, 1);
   }
-  .cta-form button:hover { filter: brightness(1.08); }
+  .cta-form button:hover { filter: brightness(1.08); transform: translateY(-2px) scale(1.025); }
   .cta-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
   .cta-note { font-size: 11.5px; color: rgba(255,255,255,0.72); margin-top: 12px; }
   .cta-success { font-size: 14.5px; color: white; padding: 10px 0; }
