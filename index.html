@@ -20,6 +20,7 @@
   .hero {
     text-align: center;
     padding: 72px 0 8px;
+    position: relative;
   }
   .hero .eyebrow { justify-content: center; margin-bottom: 18px; }
   .hero h1 {
@@ -44,6 +45,38 @@
     color: var(--ink-faint);
     margin-top: 10px;
   }
+
+  /* ---- Cursor trail dot (hero only) ---- */
+  .trail-dot {
+    position: absolute; top: 0; left: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--gold); opacity: 0; pointer-events: none; z-index: 5;
+    transform: translate(-50%, -50%); mix-blend-mode: multiply;
+    transition: opacity 0.2s ease;
+  }
+  @media (max-width: 860px), (hover: none) { .trail-dot { display: none; } }
+
+  /* ---- Ticker strip ---- */
+  .ticker-wrap {
+    border-top: 1px solid rgba(16, 36, 33, 0.2);
+    border-bottom: 1px solid rgba(16, 36, 33, 0.2);
+    background: #FFFEF8;
+    overflow: hidden;
+    margin: 30px 0 0;
+  }
+  .ticker { display: flex; white-space: nowrap; animation: scroll-left 30s linear infinite; }
+  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker span {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 12px; color: #111;
+    padding: 12px 26px;
+    border-right: 1px dashed rgba(17, 17, 17, 0.22);
+  }
+  @media (prefers-reduced-motion: reduce) { .ticker { animation: none; } }
+
+  /* ---- Confetti ---- */
+  .waitlist { position: relative; overflow: visible; }
+  .confetti-piece { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; pointer-events: none; z-index: 10; }
+
 
   /* ---- Mini receipt teaser ---- */
   .mini-receipt-wrap {
@@ -260,31 +293,37 @@
   <header>
     <nav class="site-nav" aria-label="Main">
       <a class="brand-lockup" href="index.html" aria-label="Finfolk home">
-        <img src="../finfolk-base-uppercase-f-solid-teal.png" alt="">
+        <img src="finfolk-base-uppercase-f-solid-teal.png" alt="">
         <span>finfolk</span>
       </a>
     </nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="heroSection">
+    <div class="trail-dot" id="trailDot"></div>
     <h1>Money, without the monthly panic.</h1>
     <p class="sub">For people who are employed <em>and</em> self-employed at the same time. Finfolk tracks both, and always knows what to set aside for tax.</p>
     <a class="btn-primary" href="calculator.html">Try the free tax calculator →</a>
     <span class="micro-note">No signup. Takes about a minute.</span>
 
-    <div class="mini-receipt-wrap">
+    <div class="mini-receipt-wrap" id="receiptPanel">
       <div class="mini-receipt">
         <div class="mini-receipt-label">Finfolk</div>
         <div class="mini-receipt-meta">Side income tax estimate<br>Example receipt</div>
-        <div class="mini-receipt-row"><span>Income tax on side income</span><span class="amt">£860</span></div>
-        <div class="mini-receipt-row"><span>Class 4 National Insurance</span><span class="amt">£210</span></div>
-        <div class="mini-receipt-row"><span>Student loan top-up</span><span class="amt">£170</span></div>
-        <div class="mini-receipt-row total"><span>Total to set aside</span><span class="amt">£1,240</span></div>
+        <div class="mini-receipt-row"><span>Income tax on side income</span><span class="amt" id="v1">£860</span></div>
+        <div class="mini-receipt-row"><span>Class 4 National Insurance</span><span class="amt" id="v2">£210</span></div>
+        <div class="mini-receipt-row"><span>Student loan top-up</span><span class="amt" id="v3">£170</span></div>
+        <div class="mini-receipt-row total"><span>Total to set aside</span><span class="amt" id="v4">£1,240</span></div>
         <div class="mini-receipt-barcode" aria-hidden="true"></div>
       </div>
       <div class="mini-receipt-torn"></div>
     </div>
   </section>
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker"></div>
+  </div>
+
 
   <section class="how-it-works">
     <div class="section-eyebrow">How it works</div>
@@ -318,7 +357,7 @@
 
     <form class="waitlist-form" id="waitlist-form">
       <input type="email" id="waitlist-email" placeholder="you@email.com" required>
-      <button type="submit">Notify me</button>
+      <button type="submit" id="notifyBtn">Notify me</button>
     </form>
     <div class="waitlist-success" id="waitlist-success" style="display:none;">✓ You're on the list — we'll email you when Finfolk's ready.</div>
 
@@ -332,10 +371,105 @@
 <script>
 (function () {
   'use strict';
+
+  // ---- Cursor-reactive tilt on the receipt panel + trailing dot, scoped to the hero ----
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hoverCapable = window.matchMedia('(hover: hover)').matches;
+
+  if (!reduceMotion && hoverCapable) {
+    var heroSection = document.getElementById('heroSection');
+    var panel = document.getElementById('receiptPanel');
+    var dot = document.getElementById('trailDot');
+    var dotX = 0, dotY = 0, targetX = 0, targetY = 0;
+
+    heroSection.addEventListener('mousemove', function (e) {
+      var rect = panel.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var dx = (e.clientX - cx) / rect.width;
+      panel.style.transform = 'rotate(' + (dx * 5) + 'deg)';
+
+      var heroRect = heroSection.getBoundingClientRect();
+      targetX = e.clientX - heroRect.left;
+      targetY = e.clientY - heroRect.top;
+    });
+    heroSection.addEventListener('mouseleave', function () {
+      panel.style.transform = 'rotate(0deg)';
+      dot.style.opacity = '0';
+    });
+    heroSection.addEventListener('mouseenter', function () { dot.style.opacity = '0.4'; });
+
+    (function loop() {
+      dotX += (targetX - dotX) * 0.12;
+      dotY += (targetY - dotY) * 0.12;
+      dot.style.left = dotX + 'px';
+      dot.style.top = dotY + 'px';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  // ---- Cycling numbers on the mini receipt ----
+  var states = [
+    { v1: 860, v2: 210, v3: 170, v4: 1240 },
+    { v1: 1120, v2: 340, v3: 0, v4: 1460 },
+    { v1: 640, v2: 150, v3: 90, v4: 880 }
+  ];
+  var i = 0;
+  function render(s) {
+    document.getElementById('v1').textContent = '£' + s.v1.toLocaleString('en-GB');
+    document.getElementById('v2').textContent = '£' + s.v2.toLocaleString('en-GB');
+    document.getElementById('v3').textContent = '£' + s.v3.toLocaleString('en-GB');
+    document.getElementById('v4').textContent = '£' + s.v4.toLocaleString('en-GB');
+  }
+  if (!reduceMotion) {
+    setInterval(function () {
+      i = (i + 1) % states.length;
+      var total = document.getElementById('v4');
+      total.style.transition = 'opacity 0.2s ease';
+      total.style.opacity = '0';
+      setTimeout(function () { render(states[i]); total.style.opacity = '1'; }, 220);
+    }, 3400);
+  }
+
+  // ---- Ticker strip content, duplicated for a seamless loop ----
+  var items = ['Income tax on side income', 'Class 4 National Insurance', 'Trading allowance applied', 'Student loan top-up', 'Personal Savings Allowance', 'Dividend Allowance', '31 January deadline'];
+  var tickerHtml = items.concat(items).map(function (t) { return '<span>' + t + '</span>'; }).join('');
+  document.getElementById('ticker').innerHTML = tickerHtml;
+
+  // ---- Confetti burst on waitlist submit ----
+  var colors = ['#006B78', '#62DAD2', '#F27F67', '#F7B84B'];
+  function burstConfetti() {
+    var origin = document.getElementById('notifyBtn').getBoundingClientRect();
+    var waitlistBox = document.querySelector('.waitlist');
+    var boxRect = waitlistBox.getBoundingClientRect();
+    for (var n = 0; n < 26; n++) {
+      var piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.background = colors[n % colors.length];
+      piece.style.left = (origin.left - boxRect.left + origin.width / 2) + 'px';
+      piece.style.top = (origin.top - boxRect.top) + 'px';
+      piece.style.borderRadius = (n % 2 === 0) ? '50%' : '2px';
+      waitlistBox.appendChild(piece);
+
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 60 + Math.random() * 95;
+      var endX = Math.cos(angle) * dist;
+      var endY = Math.sin(angle) * dist - 40;
+      var rot = Math.random() * 360;
+
+      piece.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(' + endX + 'px,' + endY + 'px) rotate(' + rot + 'deg)', opacity: 0 }
+      ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
+
+      (function (el) { setTimeout(function () { el.remove(); }, 1400); })(piece);
+    }
+  }
+
   // Email capture — presentational only for now.
   // TODO: wire to the same email service used on calculator.html.
   document.getElementById('waitlist-form').addEventListener('submit', function (e) {
     e.preventDefault();
+    if (!reduceMotion) burstConfetti();
     document.getElementById('waitlist-form').style.display = 'none';
     document.getElementById('waitlist-success').style.display = 'block';
   });
