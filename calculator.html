@@ -10,7 +10,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
 <style>
@@ -18,11 +18,11 @@
   header.page-head { padding: 40px 0 8px; }
   h1.hero-title {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 40px;
+    font-weight: 700;
+    font-size: 42px;
     line-height: 1.12;
     margin: 14px 0 10px;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
   }
   h1.hero-title em { font-style: italic; color: var(--pine); }
   p.hero-sub {
@@ -34,11 +34,12 @@
 
   /* ---- Form card ---- */
   .card {
-    background: var(--paper);
+    background: rgba(255, 249, 239, 0.84);
     border: 1px solid var(--rule);
     border-radius: var(--radius);
     padding: 28px 24px;
     margin-top: 28px;
+    box-shadow: var(--shadow-soft);
   }
 
   .field-group { margin-bottom: 20px; }
@@ -58,7 +59,7 @@
     align-items: stretch;
     border: 1px solid var(--rule-strong);
     border-radius: var(--radius);
-    background: var(--cream);
+    background: white;
     overflow: hidden;
   }
   .input-money .prefix {
@@ -66,7 +67,8 @@
     align-items: center;
     padding: 0 0 0 12px;
     color: var(--ink-faint);
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    font-weight: 700;
     font-size: 15px;
     user-select: none;
   }
@@ -83,12 +85,13 @@
 
   input[type="number"], select {
     width: 100%;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    font-weight: 650;
     font-size: 15px;
     padding: 11px 12px;
     border: 1px solid var(--rule-strong);
     border-radius: var(--radius);
-    background: var(--cream);
+    background: white;
     color: var(--ink);
     appearance: none;
   }
@@ -112,7 +115,7 @@
   .checkbox-row label { font-weight: 400; font-size: 13.5px; color: var(--ink-muted); margin: 0; }
 
   /* Collapsible optional sections */
-  .disclosure { border-top: 1px dashed var(--rule-strong); margin-top: 22px; padding-top: 4px; }
+  .disclosure { border-top: 1px solid var(--rule); margin-top: 22px; padding-top: 4px; }
   .disclosure summary {
     cursor: pointer;
     font-size: 13.5px;
@@ -127,7 +130,8 @@
   .disclosure summary::-webkit-details-marker { display: none; }
   .disclosure summary::after {
     content: '+';
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    font-weight: 800;
     font-size: 16px;
     color: var(--pine);
     transition: transform 0.15s ease;
@@ -149,7 +153,8 @@
 
   .hero-figure { text-align: center; padding: 6px 0 4px; }
   .hero-figure .label {
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    font-weight: 800;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -157,6 +162,7 @@
   }
   .hero-figure .amount {
     font-family: var(--font-display);
+    font-weight: 700;
     font-size: 76px;
     line-height: 1;
     color: var(--pine-deep);
@@ -166,67 +172,104 @@
   .hero-figure .monthly { font-size: 15px; color: var(--ink-muted); }
   .hero-figure .monthly strong { color: var(--ink); font-weight: 600; }
 
-  /* Receipt-styled breakdown — the signature element */
+  /* Breakdown */
   .receipt-wrap {
     margin-top: 30px;
     position: relative;
-    filter: drop-shadow(0 10px 24px rgba(34, 28, 21, 0.08));
+    filter: drop-shadow(0 18px 34px rgba(2, 75, 86, 0.12));
   }
   .receipt {
-    background: var(--paper);
-    border: 1px solid var(--rule);
-    border-bottom: none;
-    padding: 22px 22px 26px;
-    position: relative;
-  }
-  .receipt-torn {
-    height: 14px;
     background:
-      linear-gradient(-45deg, var(--cream) 7px, transparent 0) 0 0 / 14px 14px repeat-x,
-      linear-gradient(45deg, var(--cream) 7px, transparent 0) 0 0 / 14px 14px repeat-x;
-    border-left: 1px solid var(--rule);
-    border-right: 1px solid var(--rule);
-    margin-top: -1px;
+      linear-gradient(90deg, rgba(0,0,0,0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(180deg, rgba(0,0,0,0.035), transparent 18%, rgba(0,0,0,0.025) 58%, transparent),
+      #FFFEF8;
+    border: 1px solid rgba(16, 36, 33, 0.24);
+    border-radius: 4px;
+    padding: 28px 22px 26px;
+    position: relative;
+    overflow: hidden;
+    color: #111;
+    font-family: "Courier New", ui-monospace, monospace;
   }
+  .receipt::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 10px;
+    background:
+      linear-gradient(135deg, transparent 7px, #FFFEF8 7px) 0 0 / 14px 10px repeat-x,
+      linear-gradient(225deg, transparent 7px, #FFFEF8 7px) 0 0 / 14px 10px repeat-x;
+  }
+  .receipt-torn { display: none; }
   .receipt-head {
     display: flex;
     justify-content: space-between;
-    font-family: var(--font-mono);
+    font-family: "Courier New", ui-monospace, monospace;
+    font-weight: 800;
     font-size: 11px;
-    color: var(--ink-faint);
+    color: #111;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    border-bottom: 1px dashed var(--rule-strong);
-    padding-bottom: 12px;
+    border-top: 2px solid #111;
+    border-bottom: 1px dashed #111;
+    padding-bottom: 14px;
     margin-bottom: 12px;
   }
-  .receipt-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; font-size: 14.5px; }
-  .receipt-row .desc { color: var(--ink); }
-  .receipt-row .desc .sub { display: block; font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
-  .receipt-row .amt { font-family: var(--font-mono); font-size: 14.5px; white-space: nowrap; }
-  .receipt-row.muted .desc, .receipt-row.muted .amt { color: var(--ink-faint); }
+  .receipt-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; font-size: 13.5px; line-height: 1.15; border-bottom: 1px solid rgba(17, 17, 17, 0.18); }
+  .receipt-row .desc { color: #111; text-transform: uppercase; font-weight: 700; }
+  .receipt-row .desc .sub { display: block; font-size: 10.5px; color: rgba(0, 0, 0, 0.62); margin-top: 2px; text-transform: none; font-weight: 400; }
+  .receipt-row .amt { font-family: "Courier New", ui-monospace, monospace; font-weight: 800; font-size: 14px; white-space: nowrap; color: #111; }
+  .receipt-row.muted .desc, .receipt-row.muted .amt { color: rgba(0, 0, 0, 0.56); }
   .receipt-row.total {
-    border-top: 1px dashed var(--rule-strong);
-    margin-top: 6px;
-    padding-top: 14px;
-    font-weight: 600;
+    border-top: 2px solid #111;
+    border-bottom: 2px solid #111;
+    background: transparent;
+    margin: 12px 0 10px;
+    padding: 12px 0;
+    border-radius: 0;
+    font-weight: 800;
     font-size: 16px;
   }
-  .receipt-row.total .amt { color: var(--pine-deep); font-size: 17px; }
+  .receipt-row.total .amt { color: #111; font-size: 18px; }
   .receipt-divider-label {
-    font-family: var(--font-mono);
+    font-family: "Courier New", ui-monospace, monospace;
+    font-weight: 800;
     font-size: 10.5px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--ink-faint);
-    margin: 16px 0 2px;
+    color: #111;
+    margin: 18px 0 4px;
+  }
+  .receipt-barcode {
+    height: 46px;
+    margin-top: 14px;
+    background:
+      linear-gradient(90deg,
+        #111 0 2px, transparent 2px 5px,
+        #111 5px 9px, transparent 9px 12px,
+        #111 12px 13px, transparent 13px 17px,
+        #111 17px 23px, transparent 23px 26px,
+        #111 26px 29px, transparent 29px 34px,
+        #111 34px 35px, transparent 35px 38px,
+        #111 38px 44px, transparent 44px 48px) 0 0 / 48px 46px repeat-x;
+  }
+  .receipt-note {
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 10px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    color: #111;
   }
 
   /* Assumptions + disclaimer */
   .assumptions {
     margin-top: 28px;
     padding: 18px 20px;
-    background: var(--pine-tint);
+    background: linear-gradient(135deg, rgba(223,245,240,0.95), rgba(255,249,239,0.8));
     border-radius: var(--radius);
     font-size: 13px;
     color: var(--pine-deep);
@@ -246,7 +289,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(34, 28, 21, 0.6);
+    background: rgba(16, 36, 33, 0.58);
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -260,9 +303,9 @@
     position: relative;
     width: 100%;
     max-width: 400px;
-    background: var(--pine-deep);
-    color: var(--cream);
-    border-radius: var(--radius);
+    background: var(--gradient-brand);
+    color: white;
+    border-radius: 18px;
     padding: 34px 26px 30px;
     text-align: center;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
@@ -270,8 +313,8 @@
     transition: transform 0.25s ease;
   }
   .cta-overlay.is-shown .cta-card { transform: scale(1); }
-  .cta-card h2 { font-family: var(--font-display); font-weight: 400; font-size: 26px; margin: 0 0 8px; }
-  .cta-card p { color: #D9E0D6; font-size: 14.5px; max-width: 40ch; margin: 0 auto 20px; }
+  .cta-card h2 { font-family: var(--font-display); font-weight: 700; font-size: 26px; margin: 0 0 8px; }
+  .cta-card p { color: rgba(255,255,255,0.86); font-size: 14.5px; max-width: 40ch; margin: 0 auto 20px; }
 
   .cta-close {
     position: absolute;
@@ -282,7 +325,7 @@
     border-radius: 50%;
     border: none;
     background: rgba(246, 241, 230, 0.14);
-    color: var(--cream);
+    color: white;
     font-size: 20px;
     line-height: 1;
     cursor: pointer;
@@ -303,8 +346,8 @@
     padding: 12px 14px;
     border-radius: var(--radius);
     border: 1px solid transparent;
-    background: rgba(246, 241, 230, 0.12);
-    color: var(--cream);
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
   }
   .cta-form input[type="email"]::placeholder { color: #A9B6A9; }
   .cta-form input[type="email"]:focus {
@@ -319,15 +362,15 @@
     padding: 12px 20px;
     border-radius: var(--radius);
     border: none;
-    background: var(--gold);
-    color: var(--paper);
+    background: var(--pine-deep);
+    color: white;
     cursor: pointer;
     transition: filter 0.12s ease;
   }
   .cta-form button:hover { filter: brightness(1.08); }
   .cta-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
-  .cta-note { font-size: 11.5px; color: #9FAE9C; margin-top: 12px; }
-  .cta-success { font-size: 14.5px; color: var(--cream); padding: 10px 0; }
+  .cta-note { font-size: 11.5px; color: rgba(255,255,255,0.72); margin-top: 12px; }
+  .cta-success { font-size: 14.5px; color: white; padding: 10px 0; }
 </style>
 </head>
 <body>
@@ -338,10 +381,16 @@
 
 <div class="wrap">
 
-  <a class="back-link" href="index.html">&larr; Back to Finfolk</a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="brand-lockup small" href="index.html" aria-label="Finfolk home">
+      <img src="../finfolk-base-uppercase-f-solid-teal.png" alt="">
+      <span>finfolk</span>
+    </a>
+    <a class="back-link" href="index.html">&larr; Home</a>
+  </nav>
 
   <header class="page-head">
-    <div class="eyebrow">Finfolk · free tool</div>
+    <div class="eyebrow">Free tool</div>
     <h1 class="hero-title">How much tax should you <em>set aside</em>?</h1>
     <p class="hero-sub">For people who are employed <em>and</em> earn side income — freelancing, a small business, or anything HMRC wants a cut of. Three numbers in, one honest answer out.</p>
   </header>
@@ -483,6 +532,8 @@
           <div class="desc">Class 1 National Insurance</div>
           <div class="amt" id="rowClass1">£0</div>
         </div>
+        <div class="receipt-barcode" aria-hidden="true"></div>
+        <div class="receipt-note">Keep this number warm. Update monthly.</div>
       </div>
       <div class="receipt-torn"></div>
     </div>

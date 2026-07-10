@@ -5,26 +5,33 @@
    ========================================================================= */
 
 :root {
-  --cream:        #F6F1E6;
-  --cream-deep:   #EFE7D4;
-  --paper:        #FBF8F1;
-  --ink:          #221C15;
-  --ink-muted:    #6E6555;
-  --ink-faint:    #A79E8B;
-  --pine:         #2E4A3B;
-  --pine-deep:    #203327;
-  --pine-tint:    #E4EAE2;
-  --gold:         #A8763A;
-  --rule:         #D8CDB4;
-  --rule-strong:  #B9AD8F;
-  --alert:        #8C3A2B;
-  --alert-bg:     #F1E1D8;
+  --cream:        #F7F0E4;
+  --cream-deep:   #ECE2D1;
+  --paper:        #FFF9EF;
+  --ink:          #102421;
+  --ink-muted:    #536963;
+  --ink-faint:    #8B9A94;
+  --pine:         #006B78;
+  --pine-deep:    #024B56;
+  --pine-tint:    #DFF5F0;
+  --aqua:         #62DAD2;
+  --coral:        #F27F67;
+  --gold:         #F7B84B;
+  --gold-deep:    #D99927;
+  --rule:         #D9E4DD;
+  --rule-strong:  #AFC8C1;
+  --alert:        #8F3D2F;
+  --alert-bg:     #FFE5DD;
 
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body:    'Figtree', -apple-system, sans-serif;
-  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  --radius: 3px;
+  --radius: 8px;
+  --shadow-soft: 0 18px 50px rgba(2, 75, 86, 0.12);
+  --gradient-brand: radial-gradient(circle at 72% 18%, rgba(247, 184, 75, 0.9), transparent 24%),
+                    radial-gradient(circle at 54% 48%, rgba(242, 127, 103, 0.76), transparent 28%),
+                    linear-gradient(135deg, #006B78 0%, #62DAD2 55%, #F7B84B 100%);
 }
 
 * { box-sizing: border-box; }
@@ -33,7 +40,10 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: var(--cream);
+  background:
+    radial-gradient(circle at 12% 4%, rgba(98, 218, 210, 0.24), transparent 28%),
+    radial-gradient(circle at 84% 14%, rgba(247, 184, 75, 0.20), transparent 24%),
+    linear-gradient(180deg, #FFF9EF 0%, var(--cream) 52%, #F4ECE0 100%);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 16px;
@@ -46,11 +56,11 @@ body {
   background: var(--alert-bg);
   color: var(--alert);
   text-align: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12.5px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   padding: 9px 16px;
-  border-bottom: 1px solid var(--alert);
+  border-bottom: 1px solid rgba(143, 61, 47, 0.2);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -63,11 +73,50 @@ body {
   padding: 0 20px 80px;
 }
 
+/* ---- Brand lockup ---- */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 24px;
+}
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand-lockup img {
+  display: block;
+  width: 32px;
+  height: auto;
+}
+.brand-lockup span {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.brand-lockup.small img { width: 26px; }
+.brand-lockup.small span { font-size: 23px; }
+.brand-lockup:focus-visible {
+  outline: 2px solid var(--pine);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.site-nav .back-link {
+  margin-top: 0;
+}
+
 /* ---- Eyebrow label ---- */
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 12px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--pine);
   display: flex;
@@ -76,8 +125,8 @@ body {
 }
 .eyebrow::before {
   content: '';
-  width: 6px; height: 6px;
-  background: var(--pine);
+  width: 9px; height: 9px;
+  background: var(--gradient-brand);
   border-radius: 50%;
   display: inline-block;
 }
@@ -86,7 +135,7 @@ body {
 .btn-primary, .btn-outline {
   display: inline-block;
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 750;
   font-size: 15px;
   padding: 14px 22px;
   border-radius: var(--radius);
@@ -97,16 +146,17 @@ body {
 }
 .btn-primary {
   border: none;
-  background: var(--pine-deep);
-  color: var(--cream);
+  background: var(--pine);
+  color: white;
+  box-shadow: 0 12px 24px rgba(0, 107, 120, 0.22);
 }
-.btn-primary:hover { filter: brightness(1.12); }
+.btn-primary:hover { filter: brightness(1.06) saturate(1.08); }
 .btn-outline {
-  border: 1.5px solid var(--pine-deep);
-  background: transparent;
+  border: 1.5px solid rgba(0, 107, 120, 0.32);
+  background: rgba(255, 249, 239, 0.5);
   color: var(--pine-deep);
 }
-.btn-outline:hover { background: var(--pine-deep); color: var(--cream); }
+.btn-outline:hover { background: var(--pine-deep); color: white; }
 .btn-primary:focus-visible, .btn-outline:focus-visible {
   outline: 2px solid var(--pine);
   outline-offset: 2px;
@@ -127,7 +177,7 @@ footer.page-foot {
   gap: 6px;
   font-family: var(--font-body);
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-muted);
   text-decoration: none;
   margin-top: 28px;

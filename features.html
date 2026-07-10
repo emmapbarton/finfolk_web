@@ -9,7 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
 <style>
@@ -17,17 +17,15 @@
 
   .hero { padding: 50px 0 10px; }
   .hero h1 {
-    font-family: var(--font-display); font-weight: 400; font-size: 44px; line-height: 1.1;
+    font-family: var(--font-display); font-weight: 700; font-size: 44px; line-height: 1.1;
     margin: 16px 0 16px; max-width: 15ch;
   }
   @media (max-width: 600px) { .hero h1 { font-size: 32px; } }
   .hero p.sub { font-size: 17px; color: var(--ink-muted); max-width: 52ch; margin: 0; }
 
   .torn-divider {
-    height: 20px; margin: 56px 0;
-    background:
-      linear-gradient(-45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x,
-      linear-gradient(45deg, var(--paper) 10px, transparent 0) 0 0/20px 20px repeat-x;
+    height: 1px; margin: 56px 0;
+    background: linear-gradient(90deg, transparent, rgba(0, 107, 120, 0.28), rgba(242, 127, 103, 0.26), transparent);
   }
 
   .feature {
@@ -39,46 +37,145 @@
   @media (max-width: 700px) { .feature, .feature.reverse { grid-template-columns: 1fr; direction: ltr; } }
 
   .feature .eyebrow-small {
-    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    font-family: var(--font-body); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
     color: var(--pine); margin-bottom: 10px;
   }
-  .feature h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0 0 10px; }
+  .feature h2 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0 0 10px; }
   .feature p { font-size: 15px; color: var(--ink-muted); margin: 0; }
 
   .visual {
-    background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 22px;
+    background: rgba(255, 249, 239, 0.82); border: 1px solid var(--rule); border-radius: 16px; padding: 22px;
+    box-shadow: var(--shadow-soft);
   }
 
   .chip-demo { display: flex; gap: 8px; flex-wrap: wrap; }
   .chip-demo span {
     border-radius: 20px; padding: 8px 14px; font-size: 12.5px; border: 1px solid var(--rule-strong);
-    background: var(--cream); color: var(--ink);
+    background: white; color: var(--ink);
   }
-  .chip-demo span.on { background: var(--pine-deep); color: var(--cream); border-color: var(--pine-deep); }
+  .chip-demo span.on { background: var(--pine); color: white; border-color: var(--pine); }
 
-  .tax-demo .row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; color: var(--ink-muted); }
-  .tax-demo .row.total { border-top: 1px dashed var(--rule-strong); margin-top: 6px; padding-top: 12px; font-weight: 600; color: var(--ink); }
-  .tax-demo .row.total .amt { color: var(--pine-deep); font-size: 16px; }
+  .tax-demo, .stat-demo, .cash-demo {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(180deg, rgba(0,0,0,0.035), transparent 18%, rgba(0,0,0,0.025) 58%, transparent),
+      #FFFEF8;
+    border-color: rgba(16, 36, 33, 0.24);
+    border-radius: 4px;
+    color: #111;
+    font-family: "Courier New", ui-monospace, monospace;
+  }
+  .tax-demo, .cash-demo {
+    display: flex;
+    flex-direction: column;
+  }
+  .tax-demo::before, .stat-demo::before, .cash-demo::before {
+    content: '';
+    display: block;
+    height: 20px;
+    margin: -22px -22px 14px;
+    border-bottom: 2px solid #111;
+    background:
+      linear-gradient(135deg, transparent 7px, #FFFEF8 7px) 0 0 / 14px 10px repeat-x,
+      linear-gradient(225deg, transparent 7px, #FFFEF8 7px) 0 0 / 14px 10px repeat-x;
+    order: -2;
+  }
+  .tax-demo::after {
+    content: 'Finfolk estimate / 2026-27';
+    display: block;
+    order: -1;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #111;
+    margin: -2px 0 10px;
+    order: -1;
+  }
+  .tax-demo .row { display: flex; justify-content: space-between; font-size: 13px; line-height: 1.15; padding: 8px 0; color: #111; border-bottom: 1px solid rgba(17, 17, 17, 0.18); }
+  .tax-demo .row:last-child { border-bottom: 0; }
+  .tax-demo .row span:last-child { font-weight: 800; color: #111; }
+  .tax-demo .row.total {
+    border-top: 2px solid #111;
+    border-bottom: 2px solid #111;
+    background: transparent;
+    margin: 10px 0 0;
+    padding: 10px 0;
+    border-radius: 0;
+    font-weight: 800;
+    color: #111;
+  }
+  .tax-demo .row.total .amt { color: #111; font-size: 16px; }
+  .thermal-feature-barcode {
+    height: 32px;
+    margin-top: 12px;
+    background:
+      linear-gradient(90deg,
+        #111 0 2px, transparent 2px 5px,
+        #111 5px 9px, transparent 9px 12px,
+        #111 12px 13px, transparent 13px 17px,
+        #111 17px 23px, transparent 23px 26px,
+        #111 26px 29px, transparent 29px 34px,
+        #111 34px 35px, transparent 35px 38px,
+        #111 38px 44px, transparent 44px 48px) 0 0 / 48px 32px repeat-x;
+  }
 
   .bar-demo .bar-row { display: grid; grid-template-columns: 60px 1fr; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-muted); margin-bottom: 10px; }
   .bar-demo .bar { height: 7px; background: var(--cream-deep); border-radius: 4px; overflow: hidden; }
-  .bar-demo .bar div { height: 100%; background: var(--gold); }
+  .bar-demo .bar div { height: 100%; background: linear-gradient(90deg, var(--pine), var(--aqua), var(--gold)); }
 
   .stat-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .stat-demo .stat { background: var(--cream); border-radius: 8px; padding: 14px 16px; }
-  .stat-demo .stat .l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); margin-bottom: 6px; }
-  .stat-demo .stat .v { font-size: 20px; font-family: var(--font-mono); color: var(--pine-deep); }
+  .stat-demo::before { grid-column: 1 / -1; order: -2; }
+  .stat-demo::after {
+    content: 'Finfolk snapshot';
+    grid-column: 1 / -1;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #111;
+    margin: -2px 0 -2px;
+    order: -1;
+  }
+  .stat-demo .stat { background: transparent; border-top: 1px solid rgba(17, 17, 17, 0.18); border-radius: 0; padding: 12px 0 0; }
+  .stat-demo .stat:first-of-type {
+    background: transparent;
+  }
+  .stat-demo .stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #111; margin-bottom: 6px; }
+  .stat-demo .stat .v { font-size: 20px; font-family: "Courier New", ui-monospace, monospace; font-weight: 800; color: #111; }
+  .stat-demo .thermal-feature-barcode { grid-column: 1 / -1; }
 
   .cash-demo { text-align: center; }
-  .cash-demo .big { font-family: var(--font-display); font-size: 40px; color: var(--pine-deep); }
-  .cash-demo .l { font-size: 12px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .cash-demo::after {
+    content: 'Cash flow receipt';
+    display: block;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #111;
+    margin: -2px 0 12px;
+    order: -1;
+  }
+  .cash-demo .big { font-family: var(--font-display); font-weight: 700; font-size: 40px; color: #111; }
+  .cash-demo .big {
+    background: #111;
+    color: #FFFEF8;
+    border-radius: 0;
+    padding: 16px 12px 12px;
+    margin-top: 2px;
+  }
+  .cash-demo .l { font-size: 11px; color: #111; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 12px; border-top: 1px dashed #111; padding-top: 12px; }
 
   .closing {
-    background: var(--pine-deep); color: var(--cream); border-radius: var(--radius); padding: 46px 32px;
+    background: var(--gradient-brand); color: white; border-radius: 18px; padding: 46px 32px;
     text-align: center; margin-top: 20px;
+    box-shadow: 0 20px 50px rgba(0, 107, 120, 0.2);
   }
-  .closing h2 { font-family: var(--font-display); font-weight: 400; font-size: 30px; margin: 0 0 10px; }
-  .closing p { color: #D9E0D6; font-size: 15px; max-width: 44ch; margin: 0 auto 24px; }
+  .closing h2 { font-family: var(--font-display); font-weight: 700; font-size: 30px; margin: 0 0 10px; }
+  .closing p { color: rgba(255,255,255,0.86); font-size: 15px; max-width: 44ch; margin: 0 auto 24px; }
 </style>
 </head>
 <body>
@@ -89,10 +186,16 @@
 
 <div class="wrap-wide">
 
-  <a class="back-link" href="index.html">&larr; Back to Finfolk</a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="brand-lockup small" href="index.html" aria-label="Finfolk home">
+      <img src="../finfolk-base-uppercase-f-solid-teal.png" alt="">
+      <span>finfolk</span>
+    </a>
+    <a class="back-link" href="index.html">&larr; Home</a>
+  </nav>
 
   <section class="hero">
-    <div class="eyebrow">Finfolk</div>
+    <div class="eyebrow">Features</div>
     <h1>Two financial lives. One place to see them together.</h1>
     <p class="sub">Most people who are employed and self-employed run two separate apps — one for their job, one for their side income — and do the hard part, combining them, themselves, once a year, under pressure. Finfolk doesn't split you into two accounts. Everything below runs off the same underlying picture, which is exactly why the tax number you get is real, not a guess.</p>
   </section>
@@ -124,6 +227,7 @@
       <div class="row"><span>ST profit to date</span><span>£3,002.00</span></div>
       <div class="row"><span>PAYE salary</span><span>£6,642.00</span></div>
       <div class="row total"><span>Estimated SA bill</span><span class="amt">£1,240.00</span></div>
+      <div class="thermal-feature-barcode" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -149,6 +253,7 @@
     <div class="visual stat-demo">
       <div class="stat"><div class="l">Net worth</div><div class="v">£18,420</div></div>
       <div class="stat"><div class="l">This month</div><div class="v">+£640</div></div>
+      <div class="thermal-feature-barcode" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -161,6 +266,7 @@
     <div class="visual cash-demo">
       <div class="big">£0.00</div>
       <div class="l">No open invoices — cash flow is clear</div>
+      <div class="thermal-feature-barcode" aria-hidden="true"></div>
     </div>
   </section>
 
