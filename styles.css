@@ -32,8 +32,6 @@
   --gradient-brand: radial-gradient(circle at 72% 18%, rgba(247, 184, 75, 0.9), transparent 24%),
                     radial-gradient(circle at 54% 48%, rgba(242, 127, 103, 0.76), transparent 28%),
                     linear-gradient(135deg, #006B78 0%, #62DAD2 55%, #F7B84B 100%);
-  --cursor-default: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M6 4 L21 14 L14 16 L11 23 Z' fill='%23102421'/%3E%3Ccircle cx='19' cy='9' r='4' fill='%2362DAD2' opacity='.9'/%3E%3C/svg%3E") 6 4, auto;
-  --cursor-active: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%23F7B84B'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23006B78'/%3E%3C/svg%3E") 16 16, pointer;
 }
 
 * { box-sizing: border-box; }
@@ -51,7 +49,6 @@ body {
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  cursor: var(--cursor-default);
 }
 
 a,
@@ -62,7 +59,7 @@ select,
 .btn-primary,
 .btn-outline,
 .brand-lockup {
-  cursor: var(--cursor-active);
+  cursor: pointer;
 }
 
 /* ---- Draft guard banner ---- */

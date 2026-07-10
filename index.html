@@ -55,24 +55,6 @@
   }
   @media (max-width: 860px), (hover: none) { .trail-dot { display: none; } }
 
-  /* ---- Ticker strip ---- */
-  .ticker-wrap {
-    border-top: 1px solid rgba(16, 36, 33, 0.2);
-    border-bottom: 1px solid rgba(16, 36, 33, 0.2);
-    background: #FFFEF8;
-    overflow: hidden;
-    margin: 30px 0 0;
-  }
-  .ticker { display: flex; white-space: nowrap; animation: scroll-left 30s linear infinite; }
-  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .ticker span {
-    font-family: "Courier New", ui-monospace, monospace;
-    font-size: 12px; color: #111;
-    padding: 12px 26px;
-    border-right: 1px dashed rgba(17, 17, 17, 0.22);
-  }
-  @media (prefers-reduced-motion: reduce) { .ticker { animation: none; } }
-
   /* ---- Confetti ---- */
   .waitlist { position: relative; overflow: visible; }
   .confetti-piece { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; pointer-events: none; z-index: 10; }
@@ -296,6 +278,7 @@
         <img src="finfolk-base-uppercase-f-solid-teal.png" alt="">
         <span>finfolk</span>
       </a>
+      <a href="features.html" style="font-size:14px; font-weight:600; color:var(--pine); text-decoration:none;">More...</a>
     </nav>
   </header>
 
@@ -319,10 +302,6 @@
       <div class="mini-receipt-torn"></div>
     </div>
   </section>
-
-  <div class="ticker-wrap">
-    <div class="ticker" id="ticker"></div>
-  </div>
 
 
   <section class="how-it-works">
@@ -429,11 +408,6 @@
       setTimeout(function () { render(states[i]); total.style.opacity = '1'; }, 220);
     }, 3400);
   }
-
-  // ---- Ticker strip content, duplicated for a seamless loop ----
-  var items = ['Income tax on side income', 'Class 4 National Insurance', 'Trading allowance applied', 'Student loan top-up', 'Personal Savings Allowance', 'Dividend Allowance', '31 January deadline'];
-  var tickerHtml = items.concat(items).map(function (t) { return '<span>' + t + '</span>'; }).join('');
-  document.getElementById('ticker').innerHTML = tickerHtml;
 
   // ---- Confetti burst on waitlist submit ----
   var colors = ['#006B78', '#62DAD2', '#F27F67', '#F7B84B'];
