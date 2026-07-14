@@ -400,6 +400,7 @@
   .cta-form button:hover { filter: brightness(1.08); transform: translateY(-2px) scale(1.025); }
   .cta-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
   .cta-note { font-size: 11.5px; color: rgba(255,255,255,0.72); margin-top: 12px; }
+  .cta-error { font-size: 14.5px; color: #FFE5DD; padding: 10px 0; }
   .cta-success { font-size: 14.5px; color: white; padding: 10px 0; }
 </style>
 </head>
@@ -598,11 +599,14 @@
       <h2 id="ctaTitle">Track this all year, automatically</h2>
       <p>Finfolk keeps this number accurate every time a payslip or invoice lands — no spreadsheet required.</p>
 
-      <form class="cta-form" id="notify-form">
-        <input type="email" id="notify-email" placeholder="you@email.com" required>
+      <form class="cta-form" id="notify-form" action="https://formspree.io/f/mqerakdk" method="POST">
+        <input type="email" id="notify-email" name="email" placeholder="you@email.com" required>
+        <input type="hidden" name="source" value="calculator-popup">
+        <input type="hidden" name="_subject" value="New Finfolk waitlist signup">
         <button type="submit" id="notifyBtnModal">Notify me</button>
       </form>
       <div class="cta-success" id="notify-success" style="display:none;">✓ You're on the list — we'll email you when Finfolk's ready.</div>
+      <div class="cta-error" id="notify-error" style="display:none;">Something went wrong — mind trying again?</div>
 
       <div class="cta-note">One email, when it's ready. No spam, no waitlist games.</div>
     </div>
@@ -924,13 +928,33 @@
     }
   }
 
-  // Email capture — presentational only for now.
-  // TODO: wire to real email service (e.g. Mailchimp/ConvertKit/Supabase table) before launch.
+  // Waitlist signup — submits to Formspree for real.
   document.getElementById('notify-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!reduceMotionCalc) burstConfetti('notifyBtnModal', document.getElementById('ctaCard'));
-    document.getElementById('notify-form').style.display = 'none';
-    document.getElementById('notify-success').style.display = 'block';
+    var form = this;
+    var btn = document.getElementById('notifyBtnModal');
+    var errorEl = document.getElementById('notify-error');
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function (response) {
+      if (response.ok) {
+        if (!reduceMotionCalc) burstConfetti('notifyBtnModal', document.getElementById('ctaCard'));
+        form.style.display = 'none';
+        document.getElementById('notify-success').style.display = 'block';
+      } else {
+        throw new Error('Formspree returned an error');
+      }
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = 'Notify me';
+      errorEl.style.display = 'block';
+    });
   });
 })();
 </script>
