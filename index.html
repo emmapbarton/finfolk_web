@@ -262,6 +262,7 @@
   .waitlist-form button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
   .waitlist-note { font-size: 11.5px; color: rgba(255,255,255,0.72); margin-top: 14px; }
   .waitlist-success { font-size: 14.5px; color: white; padding: 10px 0; }
+  .waitlist-error { font-size: 14.5px; color: #FFE5DD; padding: 10px 0; }
 </style>
 </head>
 <body>
@@ -334,11 +335,14 @@
     <h2>Get early access</h2>
     <p>Finfolk isn't quite ready. Leave your email and we'll let you know the moment it is.</p>
 
-    <form class="waitlist-form" id="waitlist-form">
-      <input type="email" id="waitlist-email" placeholder="you@email.com" required>
+    <form class="waitlist-form" id="waitlist-form" action="https://formspree.io/f/mqerakdk" method="POST">
+      <input type="email" id="waitlist-email" name="email" placeholder="you@email.com" required>
+      <input type="hidden" name="source" value="homepage-waitlist">
+      <input type="hidden" name="_subject" value="New Finfolk waitlist signup">
       <button type="submit" id="notifyBtn">Notify me</button>
     </form>
     <div class="waitlist-success" id="waitlist-success" style="display:none;">✓ You're on the list — we'll email you when Finfolk's ready.</div>
+    <div class="waitlist-error" id="waitlist-error" style="display:none;">Something went wrong — mind trying again?</div>
 
     <div class="waitlist-note">One email, when it's ready. No spam, no waitlist games.</div>
   </section>
@@ -439,13 +443,33 @@
     }
   }
 
-  // Email capture — presentational only for now.
-  // TODO: wire to the same email service used on calculator.html.
+  // Waitlist signup — submits to Formspree for real.
   document.getElementById('waitlist-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!reduceMotion) burstConfetti();
-    document.getElementById('waitlist-form').style.display = 'none';
-    document.getElementById('waitlist-success').style.display = 'block';
+    var form = this;
+    var btn = document.getElementById('notifyBtn');
+    var errorEl = document.getElementById('waitlist-error');
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function (response) {
+      if (response.ok) {
+        if (!reduceMotion) burstConfetti();
+        form.style.display = 'none';
+        document.getElementById('waitlist-success').style.display = 'block';
+      } else {
+        throw new Error('Formspree returned an error');
+      }
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = 'Notify me';
+      errorEl.style.display = 'block';
+    });
   });
 })();
 </script>
